@@ -1,7 +1,7 @@
 import 'package:e_commerce_project/app_page.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/features/auth/data/services/auth_service.dart';
-import 'package:e_commerce_project/features/splash/presentation/splash_page.dart';
+import 'package:e_commerce_project/features/auth/presentation/widgets/signin_page.dart';
 import 'package:flutter/material.dart';
 
 void main() async {

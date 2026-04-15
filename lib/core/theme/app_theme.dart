@@ -52,6 +52,20 @@ class AppTheme {
         fontFamily: 'inter',
         letterSpacing: 3,
       ),
+      displaySmall: TextStyle(
+        fontSize: 14,
+        height: 1.5,
+        fontWeight: FontWeight.w500,
+        fontFamily: 'DM Sans',
+        color: AppColors.primaryColor,
+      ),
+      headlineMedium: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        height: 1.2,
+        color: AppColors.primaryColor,
+        fontFamily: 'Inter',
+      ),
       titleLarge: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w600,
@@ -74,6 +88,7 @@ class AppTheme {
         fontSize: 14,
         fontWeight: FontWeight.normal,
         color: AppColors.secondaryColor,
+        height: 1.5,
         fontFamily: 'DM Sans',
       ),
       bodySmall: TextStyle(

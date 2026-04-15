@@ -2,6 +2,7 @@ import 'package:e_commerce_project/core/constants/app_colors.dart';
 import 'package:e_commerce_project/core/constants/app_images.dart';
 import 'package:e_commerce_project/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class MainBottomNavBar extends StatefulWidget {
   final Function(int) onTapChanged;
@@ -13,13 +14,15 @@ class MainBottomNavBar extends StatefulWidget {
 
 class _MainBottomNavBarState extends State<MainBottomNavBar> {
   int _selectedIndex = 0;
+  final Color _selectedColor = AppColors.primaryColor;
+  final Color _unselectedColor = AppColors.backgroundColor;
 
-  final List<IconData> _icons = [
-    Icons.home_outlined,
-    Icons.search,
-    Icons.shopping_cart_outlined,
-    Icons.favorite_border,
-    Icons.account_circle_outlined,
+  final List<String> _icons = [
+    AppImages.home,
+    AppImages.search,
+    AppImages.bottomShoppingCart,
+    AppImages.heart,
+    AppImages.user,
   ];
 
   @override
@@ -48,6 +51,8 @@ class _MainBottomNavBarState extends State<MainBottomNavBar> {
   Widget _navItem({required int index}) {
     final isSelected = _selectedIndex == index;
 
+    final currentColor = isSelected ? _selectedColor : _unselectedColor;
+
     return GestureDetector(
       onTap: () {
         setState(() => _selectedIndex = index);
@@ -59,38 +64,58 @@ class _MainBottomNavBarState extends State<MainBottomNavBar> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeOut,
+            Positioned(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOut,
 
-              transform: Matrix4.translationValues(
-                0,
-                isSelected ? -16 : -16,
-                0,
-              ),
+                transform: Matrix4.translationValues(
+                  0,
+                  isSelected ? -16 : -16,
+                  0,
+                ),
 
-              width: isSelected ? 70 : 40,
-              height: isSelected ? 70 : 40,
+                width: isSelected ? 70 : 24,
+                height: isSelected ? 70 : 24,
 
-              decoration: BoxDecoration(shape: BoxShape.circle),
+                decoration: BoxDecoration(shape: BoxShape.circle),
 
-              child: isSelected
-                  ? Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        AppImages.activeSvg(),
-                        Icon(
-                          _icons[index],
-                          size: 30,
-                          color: AppColors.primaryColor,
+                child: isSelected
+                    ? Center(
+                        child: Stack(
+                          // alignment: Alignment.center,
+                          children: [
+                            AppImages.activeSvg(),
+                            Positioned(
+                              top: 12,
+                              bottom: 9,
+                              left: 12,
+                              right: 12,
+                              child: SvgPicture.asset(
+                                _icons[index],
+                                width: isSelected ? 28 : 24,
+                                height: isSelected ? 28 : 24,
+                                alignment: AlignmentGeometry.center,
+                                colorFilter: ColorFilter.mode(
+                                  currentColor,
+                                  BlendMode.srcIn,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    )
-                  : Icon(
-                      _icons[index],
-                      size: 30,
-                      color: AppColors.backgroundColor,
-                    ),
+                      )
+                    : SvgPicture.asset(
+                        _icons[index],
+                        width: isSelected ? 24 : 24,
+                        height: isSelected ? 24 : 24,
+                        alignment: AlignmentGeometry.center,
+                        colorFilter: ColorFilter.mode(
+                          currentColor,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+              ),
             ),
           ],
         ),

@@ -1,4 +1,4 @@
-import 'package:e_commerce_project/core/constants/app_colors.dart';
+import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class HomeBanner extends StatelessWidget {
@@ -35,7 +35,7 @@ class HomeBanner extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.only(bottom: 16),
                 color: const Color(0xffECF3FA),
-                // child: Image.asset(images[index], fit: BoxFit.cover),
+                // child: Image.asset(images[index], fit: BoxFit.fill),
               ),
 
               // Content
@@ -57,13 +57,10 @@ class HomeBanner extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
                     border: Border(
-                      top: BorderSide(
-                        width: 1.5,
-                        color: AppColors.primaryColor,
-                      ),
+                      top: BorderSide(width: 1.5, color: AppTheme.primaryColor),
                       bottom: BorderSide(
                         width: 1.5,
-                        color: AppColors.primaryColor,
+                        color: AppTheme.primaryColor,
                       ),
                     ),
                   ),

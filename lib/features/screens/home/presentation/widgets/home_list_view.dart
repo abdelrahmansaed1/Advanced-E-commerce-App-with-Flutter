@@ -1,4 +1,4 @@
-import 'package:e_commerce_project/core/widgets/app_product_card.dart';
+import 'package:e_commerce_project/core/widgets/product_card.dart';
 import 'package:e_commerce_project/models/products_model.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +15,10 @@ class HomeListView extends StatelessWidget {
       itemBuilder: (context, index) {
         final product = items[index];
 
-        return AppProductCard(product: product);
+        return Padding(
+          padding: const EdgeInsets.only(right: 16.0),
+          child: ProductCard(product: product),
+        );
       },
     );
   }

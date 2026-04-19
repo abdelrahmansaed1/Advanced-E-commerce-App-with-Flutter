@@ -1,6 +1,6 @@
-import 'package:e_commerce_project/core/constants/app_colors.dart';
 import 'package:e_commerce_project/core/constants/app_images.dart';
 import 'package:e_commerce_project/core/constants/app_sizes.dart';
+import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -14,8 +14,8 @@ class MainBottomNavBar extends StatefulWidget {
 
 class _MainBottomNavBarState extends State<MainBottomNavBar> {
   int _selectedIndex = 0;
-  final Color _selectedColor = AppColors.primaryColor;
-  final Color _unselectedColor = AppColors.backgroundColor;
+  final Color _selectedColor = AppTheme.primaryColor;
+  final Color _unselectedColor = AppTheme.backgroundColor;
 
   final List<String> _icons = [
     AppImages.home,
@@ -30,9 +30,7 @@ class _MainBottomNavBarState extends State<MainBottomNavBar> {
     return Container(
       height: AppSizes.kMainBottomNavBarHeigth,
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppColors.primaryColor, Colors.black],
-        ),
+        gradient: LinearGradient(colors: [AppTheme.primaryColor, Colors.black]),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(15),
           topRight: Radius.circular(15),

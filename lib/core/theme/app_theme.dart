@@ -1,39 +1,43 @@
-import 'package:e_commerce_project/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
+  static const Color backgroundColor = Color(0xFFFFFFFF);
+  static const Color primaryColor = Color(0xFF142535);
+  static const Color secondaryColor = Color(0xFF4A5F73);
+  static const Color borderColor = Color(0xFFDBE9F5);
+  static const Color cardBackgroundColor = Color(0XFFF6F8FB);
   AppTheme._();
 
   static ThemeData get light => ThemeData(
     fontFamily: 'DM Sans',
-    scaffoldBackgroundColor: AppColors.backgroundColor,
-    primaryColor: AppColors.primaryColor,
+    scaffoldBackgroundColor: backgroundColor,
+    primaryColor: primaryColor,
     colorScheme: ColorScheme.light(
-      primary: AppColors.primaryColor,
-      secondary: AppColors.secondaryColor,
-      surface: AppColors.backgroundColor,
+      primary: primaryColor,
+      secondary: secondaryColor,
+      surface: backgroundColor,
       error: Colors.red,
     ),
 
     // ── AppBar ───────────────────────────────
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.backgroundColor,
-      foregroundColor: AppColors.primaryColor,
+      backgroundColor: backgroundColor,
+      foregroundColor: primaryColor,
       elevation: 0,
       centerTitle: true,
       titleTextStyle: TextStyle(
         fontFamily: 'DM Sans',
         fontSize: 18,
         fontWeight: FontWeight.w600,
-        color: AppColors.primaryColor,
+        color: primaryColor,
       ),
-      iconTheme: IconThemeData(color: AppColors.primaryColor),
+      iconTheme: IconThemeData(color: primaryColor),
     ),
 
     // ── ListTile (for GlobalListItem) ─────────
     listTileTheme: const ListTileThemeData(
-      iconColor: AppColors.primaryColor,
-      textColor: AppColors.primaryColor,
+      iconColor: primaryColor,
+      textColor: primaryColor,
       contentPadding: EdgeInsets.symmetric(horizontal: 20),
     ),
 
@@ -42,13 +46,13 @@ class AppTheme {
       displayLarge: TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.bold,
-        color: AppColors.primaryColor,
+        color: primaryColor,
         fontFamily: 'DM Sans',
       ),
       displayMedium: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
-        color: AppColors.primaryColor,
+        color: primaryColor,
         fontFamily: 'inter',
         letterSpacing: 3,
       ),
@@ -57,56 +61,63 @@ class AppTheme {
         height: 1.5,
         fontWeight: FontWeight.w500,
         fontFamily: 'DM Sans',
-        color: AppColors.primaryColor,
+        color: primaryColor,
       ),
       headlineMedium: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w500,
         height: 1.2,
-        color: AppColors.primaryColor,
+        color: primaryColor,
         fontFamily: 'Inter',
+      ),
+      headlineSmall: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        height: 1.7,
+        color: primaryColor,
+        fontFamily: 'DM Sans',
       ),
       titleLarge: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w600,
-        color: AppColors.primaryColor,
+        color: primaryColor,
         fontFamily: 'DM Sans',
       ),
       titleMedium: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w400,
-        color: AppColors.secondaryColor,
+        color: secondaryColor,
         fontFamily: 'DM Sans',
       ),
       bodyLarge: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.normal,
-        color: AppColors.primaryColor,
+        color: primaryColor,
         fontFamily: 'DM Sans',
       ),
       bodyMedium: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.normal,
-        color: AppColors.secondaryColor,
+        color: secondaryColor,
         height: 1.5,
         fontFamily: 'DM Sans',
       ),
       bodySmall: TextStyle(
         fontSize: 11,
         fontWeight: FontWeight.normal,
-        color: AppColors.secondaryColor,
+        color: secondaryColor,
         fontFamily: 'DM Sans',
       ),
       labelMedium: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w600,
-        color: AppColors.primaryColor,
+        color: primaryColor,
         fontFamily: 'DM Sans',
       ),
       labelSmall: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.bold,
-        color: AppColors.primaryColor,
+        color: primaryColor,
         fontFamily: 'DM Sans',
       ),
     ),
@@ -114,22 +125,22 @@ class AppTheme {
     // ── Input Fields ─────────────────────────
     inputDecorationTheme: InputDecorationTheme(
       labelStyle: const TextStyle(
-        color: AppColors.secondaryColor,
+        color: secondaryColor,
         fontFamily: 'DM Sans',
         fontSize: 14,
       ),
       floatingLabelStyle: const TextStyle(
-        color: AppColors.primaryColor,
+        color: primaryColor,
         fontFamily: 'DM Sans',
         fontSize: 14,
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.borderColor),
+        borderSide: const BorderSide(color: borderColor),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.borderColor, width: 2),
+        borderSide: const BorderSide(color: borderColor, width: 2),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -141,7 +152,7 @@ class AppTheme {
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.borderColor),
+        borderSide: const BorderSide(color: borderColor),
       ),
     ),
 
@@ -149,7 +160,7 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.transparent,
-        foregroundColor: AppColors.backgroundColor,
+        foregroundColor: backgroundColor,
         elevation: 0,
         minimumSize: const Size(double.infinity, 52),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -165,7 +176,7 @@ class AppTheme {
     // ── Text Button ───────────────────────────
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: AppColors.primaryColor,
+        foregroundColor: primaryColor,
         textStyle: const TextStyle(
           fontFamily: 'DM Sans',
           fontSize: 16,
@@ -178,31 +189,29 @@ class AppTheme {
     checkboxTheme: CheckboxThemeData(
       fillColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return AppColors.primaryColor;
+          return primaryColor;
         }
         return Color(0xffF5F8FA);
       }),
-      side: const BorderSide(color: AppColors.borderColor, width: 1.5),
+      side: const BorderSide(color: borderColor, width: 1.5),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
     ),
 
     // ── Divider ───────────────────────────────
     dividerTheme: const DividerThemeData(
-      color: AppColors.borderColor,
+      color: borderColor,
       thickness: 1,
       space: 1,
     ),
 
     // ── Drawer ────────────────────────────────
-    drawerTheme: const DrawerThemeData(
-      backgroundColor: AppColors.backgroundColor,
-    ),
+    drawerTheme: const DrawerThemeData(backgroundColor: backgroundColor),
 
     // ── SnackBar ──────────────────────────────
     snackBarTheme: SnackBarThemeData(
-      backgroundColor: AppColors.primaryColor,
+      backgroundColor: primaryColor,
       contentTextStyle: const TextStyle(
-        color: AppColors.backgroundColor,
+        color: backgroundColor,
         fontFamily: 'DM Sans',
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

@@ -1,8 +1,8 @@
-import 'package:e_commerce_project/core/constants/app_colors.dart';
+import 'package:e_commerce_project/core/routes/app_routes.dart';
+import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/core/widgets/app_elevated_button.dart';
-import 'package:e_commerce_project/features/auth/presentation/widgets/signin_page.dart';
-import 'package:e_commerce_project/features/onboarding/presentation/onboarding_content.dart';
-import 'package:e_commerce_project/features/onboarding/presentation/widgets/custom_dot_Indicator.dart';
+import 'package:e_commerce_project/features/onboarding/presentation/widgets/onboarding_content.dart';
+import 'package:e_commerce_project/features/onboarding/presentation/widgets/custom_dot_indicator.dart';
 import 'package:e_commerce_project/models/onboarding_model.dart';
 import 'package:flutter/material.dart';
 
@@ -41,16 +41,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   void nextPage() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => SigninPage()),
-    );
+    Navigator.pushReplacementNamed(context, AppRoutes.signin);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      resizeToAvoidBottomInset: false,
+      backgroundColor: AppTheme.backgroundColor,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

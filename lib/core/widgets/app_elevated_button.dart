@@ -1,4 +1,4 @@
-import 'package:e_commerce_project/core/constants/app_colors.dart';
+import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class AppElevatedButton extends StatelessWidget {
@@ -14,16 +14,14 @@ class AppElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppColors.primaryColor, Colors.black],
-        ),
+        gradient: LinearGradient(colors: [AppTheme.primaryColor, Colors.black]),
       ),
       child: ElevatedButton(
         onPressed: onPressed,
         style: Theme.of(context).elevatedButtonTheme.style,
 
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15.0),
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: Text(text.toUpperCase()),
         ),
       ),

@@ -8,19 +8,20 @@ class AppImages {
   static const String personal = 'assets/images/personal.png';
 
   // svgs
-  static const String logo = 'assets/images/logo.svg';
-  static const String burger = 'assets/images/Burger.svg';
-  static const String shoppingCart = 'assets/images/shopping-cart.svg';
-  static const String bell = 'assets/images/bell.svg';
-  static const String helpCircle = 'assets/images/help-circle.svg';
-  static const String active = 'assets/images/active.svg';
-  static const String user = 'assets/images/user.svg';
+  static const String logo = 'assets/images/ic_logo.svg';
+  static const String burger = 'assets/images/ic_burger.svg';
+  static const String shoppingCart = 'assets/images/ic_shopping_cart.svg';
+  static const String bell = 'assets/images/ic_bell.svg';
+  static const String helpCircle = 'assets/images/ic_help-circle.svg';
+  static const String active = 'assets/images/ic_active.svg';
+  static const String user = 'assets/images/ic_user.svg';
   static const String bottomShoppingCart =
-      'assets/images/bottom-shopping-cart.svg';
-  static const String search = 'assets/images/search.svg';
-  static const String add = 'assets/images/plus.svg';
-  static const String home = 'assets/images/home.svg';
-  static const String heart = 'assets/images/heart.svg';
+      'assets/images/ic_bottom_shopping_cart.svg';
+  static const String search = 'assets/images/ic_search.svg';
+  static const String add = 'assets/images/ic_add.svg';
+  static const String home = 'assets/images/ic_home.svg';
+  static const String heart = 'assets/images/ic_heart.svg';
+  static const String filter = 'assets/images/ic_filter.svg';
 
   // widgets
   static Widget logoSvg({double? width, double? height}) => SvgPicture.asset(
@@ -104,13 +105,20 @@ class AppImages {
         height: height,
         semanticsLabel: 'Plus',
       );
-  static Widget searchSvg({double? width, double? height, Color? color}) =>
-      SvgPicture.asset(
-        search,
-        width: width,
-        height: height,
-        semanticsLabel: 'Search',
-      );
+  static Widget searchSvg({
+    double? width,
+    double? height,
+    Color? color,
+    ColorFilter? colorFilter,
+  }) => SvgPicture.asset(
+    search,
+    width: width,
+    height: height,
+    semanticsLabel: 'Search',
+    colorFilter:
+        colorFilter ??
+        (color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null),
+  );
   static Widget userSvg({double? width, double? height, Color? color}) =>
       SvgPicture.asset(
         user,
@@ -118,4 +126,11 @@ class AppImages {
         height: height,
         semanticsLabel: 'User',
       );
+
+  static Widget filterSvg({double? width, double? height}) => SvgPicture.asset(
+    filter,
+    width: width,
+    height: height,
+    semanticsLabel: 'Logo',
+  );
 }

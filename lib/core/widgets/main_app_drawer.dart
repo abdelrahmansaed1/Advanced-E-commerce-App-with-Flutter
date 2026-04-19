@@ -1,6 +1,8 @@
-import 'package:e_commerce_project/core/constants/app_colors.dart';
 import 'package:e_commerce_project/core/constants/app_images.dart';
-import 'package:e_commerce_project/core/widgets/global_list_item.dart';
+import 'package:e_commerce_project/core/data/dummy_data.dart';
+import 'package:e_commerce_project/core/routes/app_routes.dart';
+import 'package:e_commerce_project/core/theme/app_theme.dart';
+import 'package:e_commerce_project/core/widgets/app_list_item.dart';
 import 'package:flutter/material.dart';
 
 class MainAppDrawer extends StatelessWidget {
@@ -11,59 +13,103 @@ class MainAppDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          DrawerHeader(
-            decoration: BoxDecoration(color: AppColors.backgroundColor),
-            child: Row(
-              children: [
-                ClipOval(
-                  child: Image.asset(
-                    AppImages.personal,
-                    width: 60,
-                    height: 60,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                SizedBox(width: 10),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Abdelrahman Saed",
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
-                    Text(
-                      'abdelrahmansaeds321@gmail.com',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          DrawerHeaderWidget(),
+          drawerItem(title: 'Categories', context: context),
+          drawerItem(
+            title: 'Sales',
+            context: context,
+            route: AppRoutes.category,
+            args: {'title': 'Sales', 'products': DummyData.sales},
           ),
-          itemBuilder(title: 'Categories', context: context),
-          itemBuilder(title: 'Sales', context: context),
-          itemBuilder(title: 'New Arrivals', context: context),
-          itemBuilder(title: 'Best Sellers', context: context),
-          itemBuilder(title: 'Featured products', context: context),
+          drawerItem(
+            title: 'New Arrivals',
+            context: context,
+            route: AppRoutes.category,
+            args: {'title': 'New Arrivals', 'products': DummyData.newArrivals},
+          ),
+          drawerItem(
+            title: 'Best Sellers',
+            context: context,
+            route: AppRoutes.category,
+            args: {'title': 'Best Sellers', 'products': DummyData.bestSellers},
+          ),
+          drawerItem(
+            title: 'Featured products',
+            context: context,
+            route: AppRoutes.category,
+            args: {
+              'title': 'Featured products',
+              'products': DummyData.bestSellers,
+            },
+          ),
           SizedBox(height: 20),
 
-          GlobalListItem(
+          AppListItem(
             icon: AppImages.bellSvg(),
             title: 'Notfications',
             badgeCount: 1,
           ),
-          GlobalListItem(icon: AppImages.helpCircleSvg(), title: 'Support'),
+          AppListItem(icon: AppImages.helpCircleSvg(), title: 'Support'),
         ],
       ),
     );
   }
 
-  ListTile itemBuilder({required String title, required BuildContext context}) {
-    return ListTile(
-      leading: Icon(Icons.chevron_right, color: AppColors.primaryColor),
-      title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
-      onTap: () {},
+  GestureDetector drawerItem({
+    required String title,
+    required BuildContext context,
+    String? route,
+    Map<String, dynamic>? args,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+        if (route != null) {
+          Navigator.pushNamed(context, route, arguments: args);
+        }
+      },
+      child: ListTile(
+        leading: Icon(Icons.chevron_right, color: AppTheme.primaryColor),
+        title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
+      ),
+    );
+  }
+}
+
+class DrawerHeaderWidget extends StatelessWidget {
+  const DrawerHeaderWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DrawerHeader(
+      decoration: BoxDecoration(color: AppTheme.backgroundColor),
+      child: Row(
+        children: [
+          ClipOval(
+            child: Image.asset(
+              AppImages.personal,
+              width: 60,
+              height: 60,
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(width: 10),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Abdelrahman Saed",
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+              Text(
+                'abdelrahmansaeds321@gmail.com',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

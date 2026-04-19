@@ -1,8 +1,7 @@
 import 'dart:async';
-
-import 'package:e_commerce_project/core/constants/app_colors.dart';
 import 'package:e_commerce_project/core/constants/app_images.dart';
-import 'package:e_commerce_project/features/onboarding/presentation/onboarding_page.dart';
+import 'package:e_commerce_project/core/routes/app_routes.dart';
+import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatefulWidget {
@@ -21,17 +20,14 @@ class _SplashPageState extends State<SplashPage> {
 
   void _goToOnBoardingPage() {
     Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => OnboardingPage()),
-      );
+      Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: AppTheme.backgroundColor,
       body: SafeArea(
         child: Center(
           child: Padding(

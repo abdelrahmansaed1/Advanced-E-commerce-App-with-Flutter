@@ -1,12 +1,14 @@
 import 'package:e_commerce_project/core/constants/app_sizes.dart';
-import 'package:e_commerce_project/features/home/presentation/widgets/home_banner.dart';
-import 'package:e_commerce_project/features/home/presentation/widgets/home_list_view.dart';
-import 'package:e_commerce_project/features/home/presentation/widgets/home_text_section.dart';
+import 'package:e_commerce_project/core/data/dummy_data.dart';
+import 'package:e_commerce_project/core/routes/app_routes.dart';
+import 'package:e_commerce_project/features/screens/home/presentation/widgets/home_banner.dart';
+import 'package:e_commerce_project/features/screens/home/presentation/widgets/home_list_view.dart';
+import 'package:e_commerce_project/features/screens/home/presentation/widgets/home_text_section.dart';
 import 'package:e_commerce_project/models/products_model.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +76,16 @@ class HomePage extends StatelessWidget {
           ),
 
           // ==================== BEST SELLERS SECTION ====================
-          SliverToBoxAdapter(child: HomeTextSection(title: 'Best Sellers')),
+          SliverToBoxAdapter(
+            child: HomeTextSection(
+              title: 'Best Sellers',
+              route: AppRoutes.category,
+              args: {
+                'title': 'Best Sellers',
+                'products': DummyData.bestSellers,
+              },
+            ),
+          ),
 
           // Best Sellers
           SliverToBoxAdapter(
@@ -90,7 +101,7 @@ class HomePage extends StatelessWidget {
           // ==================== MAIn CAROUSEL FULL-HEIGHT BANNERS ====================
           HomeBanner(
             height: 200,
-            padding: 20,
+            padding: 16,
             topForText: 30,
             topForButton: 112,
             title: 'Spring Discounts \nUp To 30% Off',
@@ -100,10 +111,17 @@ class HomePage extends StatelessWidget {
 
           // ==================== Featured products SECTION ====================
           SliverToBoxAdapter(
-            child: HomeTextSection(title: 'Featured Products'),
+            child: HomeTextSection(
+              title: 'Featured Products',
+              route: AppRoutes.category,
+              args: {
+                'title': 'Featured Products',
+                'products': DummyData.bestSellers,
+              },
+            ),
           ),
 
-          // Best Sellers
+          // Featured Products
           SliverToBoxAdapter(
             child: SizedBox(
               height: 350,

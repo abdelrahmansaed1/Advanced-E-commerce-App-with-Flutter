@@ -25,6 +25,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       controller: widget.controller,
       obscureText: widget.isPassword ? obscure : false,
       validator: widget.validator,
+      keyboardType: TextInputType.emailAddress,
       onChanged: (_) => setState(() {}),
       decoration: InputDecoration(
         labelText: widget.label.toUpperCase(),

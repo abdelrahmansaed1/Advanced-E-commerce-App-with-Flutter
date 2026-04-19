@@ -1,14 +1,14 @@
+import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import '../constants/app_colors.dart';
 
-class GlobalListItem extends StatelessWidget {
+class AppListItem extends StatelessWidget {
   final Widget icon;
   final String title;
   final VoidCallback? onTap;
   final bool showArrow;
   final int badgeCount;
 
-  const GlobalListItem({
+  const AppListItem({
     super.key,
     required this.icon,
     required this.title,
@@ -25,9 +25,9 @@ class GlobalListItem extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border(
           right: BorderSide.none,
-          top: BorderSide(width: 1, color: AppColors.borderColor),
-          bottom: BorderSide(width: 1, color: AppColors.borderColor),
-          left: BorderSide(width: 1, color: AppColors.borderColor),
+          top: BorderSide(width: 1, color: AppTheme.borderColor),
+          bottom: BorderSide(width: 1, color: AppTheme.borderColor),
+          left: BorderSide(width: 1, color: AppTheme.borderColor),
         ),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(8),
@@ -62,7 +62,7 @@ class GlobalListItem extends StatelessWidget {
               ),
             ),
           if (showArrow)
-            Icon(Icons.chevron_right, color: AppColors.primaryColor, size: 20),
+            Icon(Icons.chevron_right, color: AppTheme.primaryColor, size: 20),
         ],
       ),
     );

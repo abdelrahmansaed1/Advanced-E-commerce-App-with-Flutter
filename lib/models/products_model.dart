@@ -5,6 +5,7 @@ class ProductsModel {
   final bool hasSale;
   final String? image;
   final bool isAdded;
+  final String? description;
 
   ProductsModel({
     required this.title,
@@ -13,5 +14,6 @@ class ProductsModel {
     required this.hasSale,
     this.image,
     this.isAdded = false,
+    this.description,
   });
 }

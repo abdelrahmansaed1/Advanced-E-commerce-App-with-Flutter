@@ -1,5 +1,5 @@
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:e_commerce_project/core/constants/app_colors.dart';
+import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomDotIndicator extends StatelessWidget {
@@ -19,7 +19,7 @@ class CustomDotIndicator extends StatelessWidget {
       decorator: DotsDecorator(
         size: Size.square(12),
         activeSize: Size.square(12),
-        activeColor: AppColors.primaryColor,
+        activeColor: AppTheme.primaryColor,
         color: Color(0xffDEE1E4),
       ),
     );

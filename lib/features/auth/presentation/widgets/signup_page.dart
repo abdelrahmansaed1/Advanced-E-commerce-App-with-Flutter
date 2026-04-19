@@ -1,8 +1,7 @@
-import 'package:e_commerce_project/app_page.dart';
-import 'package:e_commerce_project/core/constants/app_colors.dart';
+import 'package:e_commerce_project/core/theme/app_theme.dart';
+import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/core/widgets/app_elevated_button.dart';
 import 'package:e_commerce_project/core/widgets/app_text_form_field.dart';
-import 'package:e_commerce_project/features/auth/presentation/widgets/signin_page.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
@@ -48,16 +47,14 @@ class _SignupPageState extends State<SignupPage> {
 
   void submit() {
     if (_formKey.currentState!.validate()) {
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (context) => AppPage()));
+      Navigator.pushReplacementNamed(context, AppRoutes.screens);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: AppTheme.backgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Form(
@@ -107,9 +104,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => SigninPage()),
-                      );
+                      Navigator.pushReplacementNamed(context, AppRoutes.signin);
                     },
                     child: Text('Sign in'),
                   ),

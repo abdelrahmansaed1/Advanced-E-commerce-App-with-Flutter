@@ -21,7 +21,16 @@ class AppImages {
   static const String add = 'assets/images/ic_add.svg';
   static const String home = 'assets/images/ic_home.svg';
   static const String heart = 'assets/images/ic_heart.svg';
+  static const String heartFilled = 'assets/images/ic_heart_filled.svg';
   static const String filter = 'assets/images/ic_filter.svg';
+  static const String trash = 'assets/images/ic_trash.svg';
+  static const String camera = 'assets/images/ic_camera.svg';
+  static const String logout = 'assets/images/ic_log_out.svg';
+  static const String gift = 'assets/images/ic_gift.svg';
+  static const String mapPin = 'assets/images/ic_map_pin.svg';
+  static const String creditCard = 'assets/images/ic_credit_card.svg';
+  static const String server = 'assets/images/ic_server.svg';
+  static const String edit = 'assets/images/ic_edit.svg';
 
   // widgets
   static Widget logoSvg({double? width, double? height}) => SvgPicture.asset(
@@ -87,17 +96,24 @@ class AppImages {
   static Widget heartSvg({
     double? width,
     double? height,
-    ColorFilter? colorFilter,
     Color? color,
-  }) => SvgPicture.asset(
-    heart,
-    width: width,
-    height: height,
-    colorFilter:
-        colorFilter ??
-        (color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null),
-    semanticsLabel: 'Heart',
-  );
+    bool isFilled = false,
+  }) {
+    final String assetPath = isFilled == true
+        ? heartFilled // المسار للأيقونة الممتلئة
+        : heart; // المسار للأيقونة الفارغة
+
+    return SvgPicture.asset(
+      assetPath,
+      width: width,
+      height: height,
+      colorFilter: color != null
+          ? ColorFilter.mode(color, BlendMode.srcIn)
+          : null,
+      semanticsLabel: isFilled ? 'Filled Heart' : 'Heart',
+    );
+  }
+
   static Widget addSvg({double? width, double? height, Color? color}) =>
       SvgPicture.asset(
         add,
@@ -131,6 +147,56 @@ class AppImages {
     filter,
     width: width,
     height: height,
+    semanticsLabel: 'Filter',
+  );
+  static Widget trashSvg({double? width, double? height}) => SvgPicture.asset(
+    trash,
+    width: width,
+    height: height,
+    semanticsLabel: 'Trash',
+  );
+
+  static Widget cameraSvg({double? width, double? height}) => SvgPicture.asset(
+    camera,
+    width: width,
+    height: height,
     semanticsLabel: 'Logo',
+  );
+  static Widget logoutSvg({double? width, double? height}) => SvgPicture.asset(
+    logout,
+    width: width,
+    height: height,
+    semanticsLabel: 'Logo',
+  );
+  static Widget giftSvg({double? width, double? height}) => SvgPicture.asset(
+    gift,
+    width: width,
+    height: height,
+    semanticsLabel: 'Gift',
+  );
+  static Widget mapPinSvg({double? width, double? height}) => SvgPicture.asset(
+    mapPin,
+    width: width,
+    height: height,
+    semanticsLabel: 'Map Pin',
+  );
+  static Widget creditCardSvg({double? width, double? height}) =>
+      SvgPicture.asset(
+        creditCard,
+        width: width,
+        height: height,
+        semanticsLabel: 'Credit Card',
+      );
+  static Widget serverSvg({double? width, double? height}) => SvgPicture.asset(
+    server,
+    width: width,
+    height: height,
+    semanticsLabel: 'Server',
+  );
+  static Widget editSvg({double? width, double? height}) => SvgPicture.asset(
+    edit,
+    width: width,
+    height: height,
+    semanticsLabel: 'Edit',
   );
 }

@@ -20,7 +20,7 @@ class AppListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final content = Container(
-      margin: const EdgeInsets.only(left: 20, top: 6, bottom: 6, right: 0),
+      margin: const EdgeInsets.only(left: 16, top: 6, bottom: 6, right: 0),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
       decoration: BoxDecoration(
         border: Border(

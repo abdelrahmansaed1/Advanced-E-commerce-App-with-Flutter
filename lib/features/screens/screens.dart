@@ -26,13 +26,19 @@ class _ScreensState extends State<Screens> {
     const ProfileScreen(),
   ];
 
+  final List<PreferredSizeWidget?> _appBars = [
+    const MainAppBar(), // index 0
+    const MainAppBar(isSearchBar: true), // index 1
+    const MainAppBar(title: "Order"), // index 2
+    const MainAppBar(title: "Wishlist"), // index 3
+    const MainAppBar(title: "My Profile"), // index 4
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
-      appBar: _selectedIndex == 1
-          ? MainAppBar(isSearchBar: true)
-          : MainAppBar(),
+      appBar: _appBars[_selectedIndex],
       drawer: const MainAppDrawer(),
       body: _pages[_selectedIndex],
       bottomNavigationBar: MainBottomNavBar(

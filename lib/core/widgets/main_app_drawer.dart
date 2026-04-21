@@ -102,9 +102,13 @@ class DrawerHeaderWidget extends StatelessWidget {
                 "Abdelrahman Saed",
                 style: Theme.of(context).textTheme.labelMedium,
               ),
+              SizedBox(height: 8),
+
               Text(
                 'abdelrahmansaeds321@gmail.com',
-                style: Theme.of(context).textTheme.bodySmall,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(fontSize: 12),
               ),
             ],
           ),

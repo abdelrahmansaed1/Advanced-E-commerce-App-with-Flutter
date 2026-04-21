@@ -1,3 +1,4 @@
+import 'package:e_commerce_project/core/theme/custom_border.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -6,6 +7,7 @@ class AppTheme {
   static const Color secondaryColor = Color(0xFF4A5F73);
   static const Color borderColor = Color(0xFFDBE9F5);
   static const Color cardBackgroundColor = Color(0XFFF6F8FB);
+  static const Color secondaryBackgroundColor = Color(0xFFF7F9FA);
   AppTheme._();
 
   static ThemeData get light => ThemeData(
@@ -54,6 +56,7 @@ class AppTheme {
         fontWeight: FontWeight.w500,
         color: primaryColor,
         fontFamily: 'inter',
+        height: 1.2,
         letterSpacing: 3,
       ),
       displaySmall: TextStyle(
@@ -134,26 +137,11 @@ class AppTheme {
         fontFamily: 'DM Sans',
         fontSize: 14,
       ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: borderColor),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: borderColor, width: 2),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Colors.red, width: 2),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Colors.red, width: 2),
-      ),
-      disabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: borderColor),
-      ),
+      enabledBorder: CustomBorder(color: AppTheme.borderColor),
+      focusedBorder: CustomBorder(color: AppTheme.borderColor),
+      errorBorder: CustomBorder(color: AppTheme.borderColor),
+      focusedErrorBorder: CustomBorder(color: AppTheme.borderColor),
+      disabledBorder: CustomBorder(color: AppTheme.borderColor),
     ),
 
     // ── Elevated Button ───────────────────────

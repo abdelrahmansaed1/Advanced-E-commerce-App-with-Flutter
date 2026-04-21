@@ -28,41 +28,6 @@ class HomeScreen extends StatelessWidget {
 
     final List<String> bannerImages = ["assets/images/two.jpg"];
 
-    final List<ProductsModel> bestSellersItems = [
-      ProductsModel(
-        title: "Warm winter hat",
-        price: 12.7,
-        oldPrice: null,
-        hasSale: false,
-        image: 'assets/images/one.jpg',
-        isAdded: false,
-      ),
-      ProductsModel(
-        title: "Short summer dress",
-        price: 129.0,
-        oldPrice: 150.0,
-        hasSale: true,
-        image: '', // You can put a real path later
-        isAdded: false,
-      ),
-      ProductsModel(
-        title: "Leather handbag",
-        price: 89.99,
-        oldPrice: null,
-        hasSale: false,
-        image: '',
-        isAdded: false,
-      ),
-      ProductsModel(
-        title: "Modern suit",
-        price: 45.5,
-        oldPrice: 59.0,
-        hasSale: true,
-        image: '',
-        isAdded: false,
-      ),
-    ];
-
     return Scaffold(
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
@@ -91,7 +56,7 @@ class HomeScreen extends StatelessWidget {
           SliverToBoxAdapter(
             child: SizedBox(
               height: 350,
-              child: HomeListView(items: bestSellersItems),
+              child: HomeListView(items: DummyData.bestSellers),
             ),
           ),
 
@@ -125,7 +90,7 @@ class HomeScreen extends StatelessWidget {
           SliverToBoxAdapter(
             child: SizedBox(
               height: 350,
-              child: HomeListView(items: bestSellersItems),
+              child: HomeListView(items: DummyData.featuredProducts),
             ),
           ),
         ],

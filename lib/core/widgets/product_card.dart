@@ -1,25 +1,34 @@
 import 'package:e_commerce_project/core/constants/app_images.dart';
+import 'package:e_commerce_project/core/providers/cart_provider.dart';
+import 'package:e_commerce_project/core/providers/wishlist_provider.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/models/products_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends StatefulWidget {
   final ProductsModel product;
 
   const ProductCard({super.key, required this.product});
 
   @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  @override
   Widget build(BuildContext context) {
-    final Widget imagePath = product.image?.isNotEmpty == true
-        ? Image.asset(product.image!, fit: BoxFit.cover)
+    bool isFavorite = widget.product.isFavorite;
+    final Widget imagePath = widget.product.image?.isNotEmpty == true
+        ? Image.asset(widget.product.image![0], fit: BoxFit.cover)
         : Container();
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(
           context,
           AppRoutes.productDetail,
-          arguments: product,
+          arguments: widget.product,
         );
       },
       child: SizedBox(
@@ -46,15 +55,28 @@ class ProductCard extends StatelessWidget {
                   Positioned(
                     top: 12,
                     right: 12,
-                    child: AppImages.heartSvg(
-                      width: 16,
-                      height: 16,
-                      color: Color(0xff495E72),
+                    child: GestureDetector(
+                      onTap: () {
+                        final wishlistProvider = Provider.of<WishlistProvider>(
+                          context,
+                          listen: false,
+                        );
+                        wishlistProvider.toggleFavorite(widget.product);
+                        setState(() {
+                          isFavorite = widget.product.isFavorite;
+                        });
+                      },
+                      child: AppImages.heartSvg(
+                        width: 16,
+                        height: 16,
+                        color: Color(0xff495E72),
+                        isFilled: isFavorite,
+                      ),
                     ),
                   ),
 
                   // SALE Tag
-                  if (product.hasSale == true)
+                  if (widget.product.hasSale == true)
                     Positioned(
                       bottom: 14,
                       left: 14,
@@ -82,11 +104,36 @@ class ProductCard extends StatelessWidget {
                   Positioned(
                     bottom: 14,
                     right: 14,
-                    child: Center(
-                      child: SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: AppImages.addSvg(),
+                    child: GestureDetector(
+                      onTap: () {
+                        final cartProvider = Provider.of<CartProvider>(
+                          context,
+                          listen: false,
+                        );
+
+                        cartProvider.addProduct(
+                          widget.product,
+                          quantity: 1,
+                          selectedSize: "M",
+                          selectedColor: "Brown", // يمكن تغييره لاحقاً
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '${widget.product.title} added to cart',
+                            ),
+                            duration: const Duration(seconds: 1),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      },
+                      child: Container(
+                        child: AppImages.addSvg(
+                          width: 18,
+                          height: 18,
+                          color: AppTheme.primaryColor,
+                        ),
                       ),
                     ),
                   ),
@@ -98,7 +145,7 @@ class ProductCard extends StatelessWidget {
 
             // Title
             Text(
-              product.title,
+              widget.product.title,
               style: Theme.of(context).textTheme.bodyMedium,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -109,9 +156,9 @@ class ProductCard extends StatelessWidget {
             // Price
             Row(
               children: [
-                if (product.oldPrice != null) ...[
+                if (widget.product.oldPrice != null) ...[
                   Text(
-                    "\$${product.oldPrice}",
+                    "\$${widget.product.oldPrice}",
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       decoration: TextDecoration.lineThrough,
                     ),
@@ -119,7 +166,7 @@ class ProductCard extends StatelessWidget {
                   SizedBox(width: 5),
                 ],
                 Text(
-                  "\$${product.price}",
+                  "\$${widget.product.price}",
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
               ],

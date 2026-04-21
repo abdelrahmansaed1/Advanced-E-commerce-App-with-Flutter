@@ -17,10 +17,10 @@ class CustomDotIndicator extends StatelessWidget {
       dotsCount: length,
       position: currentPage,
       decorator: DotsDecorator(
-        size: Size.square(12),
-        activeSize: Size.square(12),
+        size: Size.square(10),
+        activeSize: Size.square(10),
         activeColor: AppTheme.primaryColor,
-        color: Color(0xffDEE1E4),
+        color: AppTheme.backgroundColor,
       ),
     );
   }

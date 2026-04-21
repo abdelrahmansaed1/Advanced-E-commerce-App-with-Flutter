@@ -1,15 +1,16 @@
-// lib/features/product/presentation/product_detail_page.dart
-
 import 'package:e_commerce_project/core/constants/app_images.dart';
+import 'package:e_commerce_project/core/providers/cart_provider.dart';
+import 'package:e_commerce_project/core/providers/wishlist_provider.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/core/widgets/app_elevated_button.dart';
-import 'package:e_commerce_project/core/widgets/app_list_item.dart';
 import 'package:e_commerce_project/core/widgets/main_app_bar.dart';
 import 'package:e_commerce_project/features/onboarding/presentation/widgets/custom_dot_indicator.dart';
 import 'package:e_commerce_project/features/product/presentation/widget/color_selecter.dart';
+import 'package:e_commerce_project/features/product/presentation/widget/price_widget.dart';
 import 'package:e_commerce_project/models/products_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final ProductsModel product;
@@ -24,8 +25,31 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   String selectedSize = 'M';
   int quantity = 1;
   Color selectedColor = Colors.brown;
+  final PageController _controller = PageController();
+  final ValueNotifier<double> _currentPageNotifier = ValueNotifier(0.0);
 
   final List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
+  String colorToHex(Color color) {
+    return '#${color.toARGB32().toRadixString(16).padLeft(8, '0')}';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // هذا هو الجزء المهم اللي كان ناقص
+    _controller.addListener(() {
+      if (_controller.page != null) {
+        _currentPageNotifier.value = _controller.page!;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +63,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Product Image
-                ProductImage(widget: widget),
+                ProductImage(
+                  product: widget.product,
+                  controller: _controller,
+                  currentPageNotifire: _currentPageNotifier,
+                ),
 
                 Padding(
                   padding: const EdgeInsets.all(16),
@@ -65,8 +93,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                               ),
                               SizedBox(width: 4),
                               Text(
-                                // widget.product.rating.toString(),
-                                '4,5',
+                                widget.product.rating.toString(),
+
                                 style: Theme.of(
                                   context,
                                 ).textTheme.bodyMedium?.copyWith(fontSize: 12),
@@ -78,7 +106,17 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                       const SizedBox(height: 16),
 
-                      PriceWidget(widget: widget),
+                      // Price Widget and Quantity ,
+                      PriceWidget(
+                        product: widget.product,
+                        quantity: quantity,
+                        onIncrement: () => setState(() => quantity++),
+                        onDecrement: () {
+                          if (quantity > 1) {
+                            setState(() => quantity--);
+                          }
+                        },
+                      ),
                       const SizedBox(height: 16),
                       // Size
                       const Text(
@@ -202,49 +240,29 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             bottom: 32,
             left: 32,
             right: 32,
-            child: AppElevatedButton(text: "ADD TO CART", onPressed: () {}),
-          ),
-        ],
-      ),
-    );
-  }
-}
+            child: AppElevatedButton(
+              text: "ADD TO CART",
+              onPressed: () {
+                final cartProvider = Provider.of<CartProvider>(
+                  context,
+                  listen: false,
+                );
 
-class PriceWidget extends StatelessWidget {
-  const PriceWidget({super.key, required this.widget});
+                cartProvider.addProduct(
+                  widget.product,
+                  quantity: quantity,
+                  selectedSize: selectedSize,
+                  selectedColor: colorToHex(selectedColor),
+                );
 
-  final ProductDetailPage widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border(
-          right: BorderSide.none,
-          top: BorderSide(width: 1, color: AppTheme.borderColor),
-          bottom: BorderSide(width: 1, color: AppTheme.borderColor),
-          left: BorderSide(width: 1, color: AppTheme.borderColor),
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          widget.product.hasSale
-              ? Text(
-                  '\$${widget.product.oldPrice}',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    height: 1.7,
-                    decoration: TextDecoration.lineThrough,
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${widget.product.title} added to cart'),
+                    duration: const Duration(seconds: 2),
+                    behavior: SnackBarBehavior.floating,
                   ),
-                )
-              : const Text(''),
-          const SizedBox(width: 8),
-          Text(
-            '\$${widget.product.price}',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              height: 1.7,
-              fontWeight: FontWeight.w700,
+                );
+              },
             ),
           ),
         ],
@@ -254,9 +272,15 @@ class PriceWidget extends StatelessWidget {
 }
 
 class ProductImage extends StatelessWidget {
-  const ProductImage({super.key, required this.widget});
-
-  final ProductDetailPage widget;
+  final ProductsModel product;
+  final PageController controller;
+  final ValueNotifier<double> currentPageNotifire;
+  const ProductImage({
+    super.key,
+    required this.controller,
+    required this.currentPageNotifire,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -267,11 +291,21 @@ class ProductImage extends StatelessWidget {
           height: 375,
           width: double.infinity,
           color: AppTheme.cardBackgroundColor,
-          child: Image.asset(
-            widget.product.image ?? '',
-            fit: BoxFit.cover,
-            errorBuilder: (_, _, _) =>
-                const Icon(Icons.image_not_supported, size: 100),
+          child: PageView.builder(
+            controller: controller,
+            itemCount: product.image != null && product.image!.isNotEmpty
+                ? product.image!.length
+                : 3,
+            itemBuilder: (context, index) {
+              return product.image != null && product.image!.isNotEmpty
+                  ? Image.asset(
+                      product.image != null && product.image!.isNotEmpty
+                          ? product.image![index]
+                          : "",
+                      fit: BoxFit.cover,
+                    )
+                  : Text('');
+            },
           ),
         ),
 
@@ -279,15 +313,25 @@ class ProductImage extends StatelessWidget {
         Positioned(
           bottom: 12,
           right: 12,
-          child: AppImages.heartSvg(
-            width: 24,
-            height: 24,
-            color: Color(0xff495E72),
+
+          child: Consumer<WishlistProvider>(
+            builder: (context, wishlistProvider, _) {
+              final isFav = wishlistProvider.isFavorite(product);
+              return GestureDetector(
+                onTap: () => wishlistProvider.toggleFavorite(product),
+                child: AppImages.heartSvg(
+                  width: 24,
+                  height: 24,
+                  color: Color(0xff495E72),
+                  isFilled: isFav,
+                ),
+              );
+            },
           ),
         ),
 
         // SALE Tag
-        if (widget.product.hasSale == true)
+        if (product.hasSale == true)
           Positioned(
             top: 6,
             left: 20,
@@ -315,29 +359,19 @@ class ProductImage extends StatelessWidget {
           bottom: 14,
           left: 0,
           right: 0,
-          child: CustomDotIndicator(length: 3, currentPage: 0),
+          child: ValueListenableBuilder<double>(
+            valueListenable: currentPageNotifire,
+            builder: (context, value, child) {
+              return CustomDotIndicator(
+                length: product.image != null && product.image!.isNotEmpty
+                    ? product.image!.length
+                    : 3,
+                currentPage: value,
+              );
+            },
+          ),
         ),
       ],
     );
   }
 }
-
-// // Color Dot Widget
-// class ColorDot extends StatelessWidget {
-//   final Color color;
-
-//   const ColorDot({super.key, required this.color});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: 32,
-//       height: 32,
-//       decoration: BoxDecoration(
-//         color: color,
-//         shape: BoxShape.circle,
-//         border: Border.all(color: Colors.grey.shade300),
-//       ),
-//     );
-//   }
-// }

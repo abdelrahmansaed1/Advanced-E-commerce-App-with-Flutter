@@ -1,6 +1,7 @@
 import 'package:e_commerce_project/core/widgets/category.dart';
 import 'package:e_commerce_project/features/product/presentation/description_screen.dart';
 import 'package:e_commerce_project/features/product/presentation/product_detail_page.dart';
+import 'package:e_commerce_project/features/screens/profile/presentation/widgets/edit_profile.dart';
 import 'package:e_commerce_project/features/screens/screens.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/features/auth/presentation/widgets/signin_page.dart';
@@ -45,6 +46,8 @@ class AppRouter {
       case AppRoutes.description:
         final args = settings.arguments as ProductsModel;
         return _route(DescriptionScreen(product: args));
+      case AppRoutes.editProfile:
+        return _route(const EditProfile());
       default:
         return _route(const Screens());
     }

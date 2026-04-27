@@ -1,9 +1,9 @@
 import 'package:e_commerce_project/core/widgets/product_card.dart';
-import 'package:e_commerce_project/models/products_model.dart';
+import 'package:e_commerce_project/features/product/model/product_model.dart';
 import 'package:flutter/material.dart';
 
 class HomeListView extends StatelessWidget {
-  final List<ProductsModel> items;
+  final List<ProductModel> items;
   const HomeListView({super.key, required this.items});
 
   @override

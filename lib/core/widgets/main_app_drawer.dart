@@ -1,15 +1,17 @@
 import 'package:e_commerce_project/core/constants/app_images.dart';
-import 'package:e_commerce_project/core/data/dummy_data.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/core/widgets/app_list_item.dart';
+import 'package:e_commerce_project/features/category/Provider/products_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MainAppDrawer extends StatelessWidget {
   const MainAppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final productsProvider = context.watch<ProductsProvider>();
     return Drawer(
       child: Column(
         children: [
@@ -19,19 +21,25 @@ class MainAppDrawer extends StatelessWidget {
             title: 'Sales',
             context: context,
             route: AppRoutes.category,
-            args: {'title': 'Sales', 'products': DummyData.sales},
+            args: {'title': 'Sales', 'products': productsProvider.onSale},
           ),
           drawerItem(
             title: 'New Arrivals',
             context: context,
             route: AppRoutes.category,
-            args: {'title': 'New Arrivals', 'products': DummyData.newArrivals},
+            args: {
+              'title': 'New Arrivals',
+              'products': productsProvider.newArrivals,
+            },
           ),
           drawerItem(
             title: 'Best Sellers',
             context: context,
             route: AppRoutes.category,
-            args: {'title': 'Best Sellers', 'products': DummyData.bestSellers},
+            args: {
+              'title': 'Best Sellers',
+              'products': productsProvider.bestSellers,
+            },
           ),
           drawerItem(
             title: 'Featured products',
@@ -39,7 +47,7 @@ class MainAppDrawer extends StatelessWidget {
             route: AppRoutes.category,
             args: {
               'title': 'Featured products',
-              'products': DummyData.bestSellers,
+              'products': productsProvider.featured,
             },
           ),
           SizedBox(height: 20),

@@ -1,32 +1,77 @@
 import 'package:e_commerce_project/core/constants/app_sizes.dart';
-import 'package:e_commerce_project/core/data/dummy_data.dart';
+import 'package:e_commerce_project/features/category/Provider/products_provider.dart';
+import 'package:e_commerce_project/features/relatedproducts/presentation/related_products_section.dart';
+import 'package:e_commerce_project/features/screens/home/provider/home_provider.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/features/screens/home/presentation/widgets/home_banner.dart';
 import 'package:e_commerce_project/features/screens/home/presentation/widgets/home_list_view.dart';
 import 'package:e_commerce_project/features/screens/home/presentation/widgets/home_text_section.dart';
-import 'package:e_commerce_project/models/products_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final homeProvider = context.watch<HomeProvider>();
+    final productsProvider = context.watch<ProductsProvider>();
+    // Loading state
+    if (homeProvider.state == HomeState.loading) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    // Error state
+    if (homeProvider.state == HomeState.error) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(homeProvider.errorMessage ?? 'Something went wrong'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => homeProvider.loadDashboard(),
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final home = homeProvider.homeData;
+    if (home == null) return const SizedBox();
+
     // Available height for full banners (Screen - AppBar - BottomNav)
     final double availableBannerHeight =
         MediaQuery.of(context).size.height -
         (Scaffold.of(context).appBarMaxHeight ?? kToolbarHeight) -
-        AppSizes.kMainBottomNavBarHeigth;
+        AppSizes.kMainBottomNavBarHeigth +
+        10;
+
+    // Top banner images
+    final List<String> topBannerImages = home.topBanner
+        .expand((b) => b.images.map((img) => img.image))
+        .toList();
+
+    // Footer banner images
+    final List<String> footerBannerImages = home.footerBanner
+        .expand((b) => b.images.map((img) => img.image))
+        .toList();
+    // final footerBanners = home.footerBanner;
+
+    // Use real API data, fallback to empty list if still loading
+    // final newArrivals = productsProvider.newArrivals;
+    final featured = productsProvider.featured;
 
     // Sample Data - Easy to replace with real data later
-    final List<String> mainCarouselImages = [
-      "assets/images/one.jpg",
-      "assets/images/two.jpg",
-      "assets/images/three.jpg",
-      "assets/images/four.jpg",
-    ];
+    // final List<String> mainCarouselImages = [
+    //   "assets/images/one.jpg",
+    //   "assets/images/two.jpg",
+    //   "assets/images/three.jpg",
+    //   "assets/images/four.jpg",
+    // ];
 
-    final List<String> bannerImages = ["assets/images/two.jpg"];
+    // final List<String> bannerImages = ["assets/images/two.jpg"];
 
     return Scaffold(
       body: CustomScrollView(
@@ -35,29 +80,23 @@ class HomeScreen extends StatelessWidget {
           // ==================== MAIn CAROUSEL FULL-HEIGHT BANNERS ====================
           HomeBanner(
             height: availableBannerHeight,
-            title: 'Black Friday sale! \nSave up to 25%',
-            count: mainCarouselImages.length,
-            images: mainCarouselImages,
+            title: home.title,
+            count: home.topBanner.length,
+            images: topBannerImages,
           ),
 
-          // ==================== BEST SELLERS SECTION ====================
+          // ==================== Featured products SECTION ====================
           SliverToBoxAdapter(
             child: HomeTextSection(
-              title: 'Best Sellers',
+              title: 'Featured Products',
               route: AppRoutes.category,
-              args: {
-                'title': 'Best Sellers',
-                'products': DummyData.bestSellers,
-              },
+              args: {'title': 'Featured Products', 'products': featured},
             ),
           ),
 
-          // Best Sellers
+          // Featured Products
           SliverToBoxAdapter(
-            child: SizedBox(
-              height: 350,
-              child: HomeListView(items: DummyData.bestSellers),
-            ),
+            child: SizedBox(height: 350, child: HomeListView(items: featured)),
           ),
 
           // Extra space at bottom
@@ -69,29 +108,28 @@ class HomeScreen extends StatelessWidget {
             padding: 16,
             topForText: 30,
             topForButton: 112,
-            title: 'Spring Discounts \nUp To 30% Off',
-            count: bannerImages.length,
-            images: bannerImages,
+            title: home.title,
+            count: home.footerBanner.length,
+            images: footerBannerImages,
+            // isFooter: true,
           ),
 
-          // ==================== Featured products SECTION ====================
-          SliverToBoxAdapter(
-            child: HomeTextSection(
-              title: 'Featured Products',
-              route: AppRoutes.category,
-              args: {
-                'title': 'Featured Products',
-                'products': DummyData.bestSellers,
-              },
-            ),
+          Consumer<ProductsProvider>(
+            builder: (context, productsProvider, _) {
+              if (productsProvider.products.isEmpty) {
+                return const SliverToBoxAdapter(child: SizedBox());
+              }
+              final firstProductId = productsProvider.products.first.productId;
+              return SliverToBoxAdapter(
+                child: RelatedProductsSection(
+                  productId: firstProductId,
+                  title: 'Trending Now',
+                ),
+              );
+            },
           ),
-
-          // Featured Products
           SliverToBoxAdapter(
-            child: SizedBox(
-              height: 350,
-              child: HomeListView(items: DummyData.featuredProducts),
-            ),
+            child: SizedBox(height: AppSizes.kMainBottomNavBarHeigth),
           ),
         ],
       ),

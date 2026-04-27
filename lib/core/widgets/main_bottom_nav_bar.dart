@@ -28,19 +28,24 @@ class _MainBottomNavBarState extends State<MainBottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppSizes.kMainBottomNavBarHeigth,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(colors: [AppTheme.primaryColor, Colors.black]),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(15),
-          topRight: Radius.circular(15),
+      color: Colors.transparent,
+      child: Container(
+        height: AppSizes.kMainBottomNavBarHeigth,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppTheme.primaryColor, Colors.black],
+          ),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
+          ),
         ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(
-          _icons.length,
-          (index) => _navItem(index: index),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: List.generate(
+            _icons.length,
+            (index) => _navItem(index: index),
+          ),
         ),
       ),
     );

@@ -1,8 +1,10 @@
 import 'package:e_commerce_project/core/constants/app_images.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
+import 'package:e_commerce_project/core/services/app_preferences.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/core/widgets/app_elevated_button.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignoutPopup extends StatelessWidget {
   final double? width;
@@ -64,10 +66,18 @@ class SignoutPopup extends StatelessWidget {
                   Expanded(
                     child: AppElevatedButton(
                       text: 'sure',
-                      onPressed: () => Navigator.pushReplacementNamed(
-                        context,
-                        AppRoutes.screens,
-                      ),
+                      onPressed: () async {
+                        final prefs = Provider.of<AppPreferences>(
+                          context,
+                          listen: false,
+                        );
+                        await prefs.logout();
+                        if (!context.mounted) return;
+                        Navigator.pushReplacementNamed(
+                          context,
+                          AppRoutes.signin,
+                        );
+                      },
                       color: AppTheme.secondaryBackgroundColor,
                     ),
                   ),

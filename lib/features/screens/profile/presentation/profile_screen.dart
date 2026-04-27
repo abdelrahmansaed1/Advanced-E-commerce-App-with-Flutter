@@ -1,7 +1,6 @@
 import 'package:e_commerce_project/core/constants/app_images.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/core/widgets/app_list_item.dart';
-import 'package:e_commerce_project/core/widgets/custom_popup.dart';
 import 'package:e_commerce_project/features/screens/profile/presentation/widgets/signout_popup.dart';
 import 'package:flutter/material.dart';
 

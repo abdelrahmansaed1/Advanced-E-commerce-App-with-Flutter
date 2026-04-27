@@ -1,10 +1,12 @@
 import 'package:e_commerce_project/core/routes/app_routes.dart';
+import 'package:e_commerce_project/core/services/app_preferences.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/core/widgets/app_elevated_button.dart';
 import 'package:e_commerce_project/features/onboarding/presentation/widgets/onboarding_content.dart';
 import 'package:e_commerce_project/features/onboarding/presentation/widgets/custom_dot_indicator.dart';
-import 'package:e_commerce_project/models/onboarding_model.dart';
+import 'package:e_commerce_project/features/onboarding/model/onboarding_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -40,7 +42,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
     });
   }
 
-  void nextPage() {
+  void nextPage() async {
+    final prefs = Provider.of<AppPreferences>(context, listen: false);
+    await prefs.setOnboardingCompleted(true);
+    if (!mounted) return;
     Navigator.pushReplacementNamed(context, AppRoutes.signin);
   }
 

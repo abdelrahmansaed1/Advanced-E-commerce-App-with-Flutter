@@ -1,4 +1,4 @@
-import 'package:e_commerce_project/models/onboarding_model.dart';
+import 'package:e_commerce_project/features/onboarding/model/onboarding_model.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingContent extends StatelessWidget {

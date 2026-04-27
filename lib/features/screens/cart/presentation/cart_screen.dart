@@ -1,9 +1,9 @@
 import 'package:e_commerce_project/core/constants/app_images.dart';
-import 'package:e_commerce_project/core/providers/cart_provider.dart';
+import 'package:e_commerce_project/features/screens/cart/provider/cart_provider.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/core/widgets/app_elevated_button.dart';
-import 'package:e_commerce_project/models/cart_item.dart';
+import 'package:e_commerce_project/features/screens/cart/model/cart_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +29,8 @@ class CartPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: AppElevatedButton(
-              color: Color(0xFFF7F9FA),
+              // color: Color(0xFFF7F9FA),
+              color: Colors.black,
               text: "SHOP NOW",
               onPressed: () {
                 Navigator.pushReplacementNamed(context, AppRoutes.screens);
@@ -96,7 +97,7 @@ class CartPage extends StatelessWidget {
     CartProvider cart,
   ) {
     return Dismissible(
-      key: Key(item.product.title + (item.selectedSize ?? '')),
+      key: Key(item.product.name + (item.selectedSize ?? '')),
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
@@ -125,16 +126,13 @@ class CartPage extends StatelessWidget {
                     ),
                     color: AppTheme.cardBackgroundColor,
                   ),
-                  child:
-                      item.product.image != null &&
-                          item.product.image!.isNotEmpty
-                      ? Image.asset(
-                          item.product.image![0],
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Text(''),
+                  child: item.product.thumbnailUrl.isNotEmpty
+                      ? Image.network(
+                          item.product.thumbnailUrl,
+                          fit: BoxFit.fill,
+                          errorBuilder: (_, _, _) => const SizedBox(),
                         )
-                      : const Text(''),
+                      : const SizedBox(),
                 ),
                 if (item.product.hasSale == true)
                   Positioned(
@@ -181,14 +179,14 @@ class CartPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item.product.title,
+                          item.product.name,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         Row(
                           children: [
                             item.product.hasSale
                                 ? Text(
-                                    '\$${item.product.oldPrice}',
+                                    '\$${item.product.special}',
                                     style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(
                                           decoration:

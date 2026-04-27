@@ -1,8 +1,8 @@
-import 'package:e_commerce_project/models/products_model.dart';
+import 'package:e_commerce_project/features/product/model/product_model.dart';
 import 'package:flutter/material.dart';
 
 class DescriptionScreen extends StatelessWidget {
-  final ProductsModel product;
+  final ProductModel product;
   const DescriptionScreen({super.key, required this.product});
 
   @override
@@ -17,16 +17,15 @@ class DescriptionScreen extends StatelessWidget {
 
             children: [
               Text(
-                product.title,
+                product.name,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               SizedBox(height: 16),
-              product.description == null
-                  ? Text('No description')
-                  : Text(
-                      product.description!,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
+
+              Text(
+                product.description,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
             ],
           ),
         ),

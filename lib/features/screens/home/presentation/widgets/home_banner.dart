@@ -1,4 +1,6 @@
 import 'package:e_commerce_project/core/theme/app_theme.dart';
+import 'package:e_commerce_project/features/screens/home/presentation/widgets/video_widget.dart';
+
 import 'package:flutter/material.dart';
 
 class HomeBanner extends StatelessWidget {
@@ -25,18 +27,16 @@ class HomeBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
+        final String? mediaUrl = index < images.length ? images[index] : null;
+
         return Container(
           height: height,
-          padding: EdgeInsets.only(right: padding ?? 0),
+          padding: EdgeInsets.only(right: padding ?? 0, bottom: padding ?? 0),
           child: Stack(
-            fit: StackFit.expand,
+            // fit: StackFit.expand,
             children: [
               // Background
-              Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                color: const Color(0xffECF3FA),
-                // child: Image.asset(images[index], fit: BoxFit.fill),
-              ),
+              _buildMedia(mediaUrl),
 
               // Content
               Positioned(
@@ -75,5 +75,35 @@ class HomeBanner extends StatelessWidget {
         );
       }, childCount: count),
     );
+  }
+
+  // ================= MEDIA BUILDER =================
+  Widget _buildMedia(String? url) {
+    // ===== Fallback (no media) =====
+    if (url == null || url.isEmpty) {
+      return Container(color: const Color(0xffECF3FA));
+    }
+
+    // ===== VIDEO =====
+    if (url.toLowerCase().endsWith('.mp4')) {
+      return SmartVideoWidget(url: url, height: height);
+    }
+
+    // ===== IMAGE =====
+    return url.isNotEmpty
+        ? Image.network(
+            url,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Container(color: const Color(0xffECF3FA));
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return Container(color: const Color(0xffECF3FA));
+            },
+          )
+        : Container(color: const Color(0xffECF3FA));
   }
 }

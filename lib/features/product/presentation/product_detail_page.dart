@@ -1,376 +1,419 @@
 import 'package:e_commerce_project/core/constants/app_images.dart';
-import 'package:e_commerce_project/core/providers/cart_provider.dart';
-import 'package:e_commerce_project/core/providers/wishlist_provider.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/core/widgets/app_elevated_button.dart';
 import 'package:e_commerce_project/core/widgets/main_app_bar.dart';
 import 'package:e_commerce_project/features/onboarding/presentation/widgets/custom_dot_indicator.dart';
+import 'package:e_commerce_project/features/product/model/product_detail_model.dart';
+import 'package:e_commerce_project/features/product/model/product_model.dart';
 import 'package:e_commerce_project/features/product/presentation/widget/color_selecter.dart';
 import 'package:e_commerce_project/features/product/presentation/widget/price_widget.dart';
-import 'package:e_commerce_project/models/products_model.dart';
+import 'package:e_commerce_project/features/product/provider/product_detail_provider.dart';
+import 'package:e_commerce_project/features/relatedproducts/presentation/related_products_section.dart';
+import 'package:e_commerce_project/features/screens/cart/provider/cart_provider.dart';
+import 'package:e_commerce_project/features/screens/wishlist/provider/wishlist_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ProductDetailPage extends StatefulWidget {
-  final ProductsModel product;
+  final String productId;
 
-  const ProductDetailPage({super.key, required this.product});
+  const ProductDetailPage({super.key, required this.productId});
 
   @override
   State<ProductDetailPage> createState() => _ProductDetailPageState();
 }
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
-  String selectedSize = 'M';
-  int quantity = 1;
-  Color selectedColor = Colors.brown;
   final PageController _controller = PageController();
   final ValueNotifier<double> _currentPageNotifier = ValueNotifier(0.0);
+  Color selectedColor = Colors.brown;
 
-  final List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
-  String colorToHex(Color color) {
-    return '#${color.toARGB32().toRadixString(16).padLeft(8, '0')}';
-  }
+  // ✅ Cache the converted ProductModel so wishlist isFavorite works consistently
+  ProductModel? _cachedProductModel;
 
   @override
   void initState() {
     super.initState();
-
-    // هذا هو الجزء المهم اللي كان ناقص
     _controller.addListener(() {
       if (_controller.page != null) {
         _currentPageNotifier.value = _controller.page!;
       }
     });
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   context.read<ProductDetailProvider>().loadProduct(
+    //     productId: widget.productId,
+    //   );
+    // });
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _currentPageNotifier.dispose();
     super.dispose();
+  }
+
+  String colorToHex(Color color) =>
+      '#${color.toARGB32().toRadixString(16).padLeft(8, '0')}';
+
+  // ✅ Convert ProductDetailModel → ProductModel once and cache it
+  ProductModel _toProductModel(ProductDetailModel product) {
+    _cachedProductModel ??= ProductModel(
+      productId: product.productId,
+      sku: product.sku,
+      name: product.name,
+      price: product.price,
+      special: product.hasSale ? product.special : '0',
+      thumbnailUrl: product.images.isNotEmpty ? product.images.first : '',
+      image: product.images.map((url) => ProductImageModel(url: url)).toList(),
+      currency: product.currency,
+      discountPercentage: product.discountPercentage,
+      description: product.description,
+      isNew: product.isNew,
+      isBestseller: product.isBestseller,
+      showLabel: false,
+      labels: [],
+      rating: product.rating.toString(),
+    );
+    return _cachedProductModel!;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MainAppBar(showBackButton: true),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: EdgeInsets.only(bottom: 70),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Product Image
-                ProductImage(
-                  product: widget.product,
-                  controller: _controller,
-                  currentPageNotifire: _currentPageNotifier,
-                ),
+    return Consumer<ProductDetailProvider>(
+      builder: (context, provider, _) {
+        if (provider.state == ProductDetailState.loading) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title and Price
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        if (provider.state == ProductDetailState.error) {
+          return Scaffold(
+            appBar: MainAppBar(showBackButton: true),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(provider.errorMessage ?? 'Something went wrong'),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: () =>
+                        provider.loadProduct(productId: widget.productId),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        final product = provider.product;
+        if (product == null) return const Scaffold();
+
+        // ✅ Build once per product load
+        final productModel = _toProductModel(product);
+
+        return Scaffold(
+          appBar: MainAppBar(showBackButton: true),
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                padding: const EdgeInsets.only(bottom: 100),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildImageSection(product, productModel),
+
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Text(
-                              widget.product.title,
-                              style: Theme.of(context).textTheme.headlineMedium,
-                            ),
-                          ),
+                          // Title and Rating
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Icon(
-                                Icons.star,
-                                color: AppTheme.secondaryColor,
-                                size: 10,
+                              Expanded(
+                                child: Text(
+                                  product.name,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.headlineMedium,
+                                ),
                               ),
-                              SizedBox(width: 4),
-                              Text(
-                                widget.product.rating.toString(),
-
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodyMedium?.copyWith(fontSize: 12),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    color: AppTheme.secondaryColor,
+                                    size: 10,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    // ✅ rating is double, format it cleanly
+                                    product.rating > 0
+                                        ? product.rating.toStringAsFixed(1)
+                                        : 'N/A',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(fontSize: 12),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
 
-                      const SizedBox(height: 16),
+                          const SizedBox(height: 16),
 
-                      // Price Widget and Quantity ,
-                      PriceWidget(
-                        product: widget.product,
-                        quantity: quantity,
-                        onIncrement: () => setState(() => quantity++),
-                        onDecrement: () {
-                          if (quantity > 1) {
-                            setState(() => quantity--);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      // Size
-                      const Text(
-                        "Size",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: sizes.map((size) {
-                          final bool isSelected = selectedSize == size;
-                          return GestureDetector(
-                            onTap: () => setState(() => selectedSize = size),
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 10),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 18,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? AppTheme.primaryColor
-                                    : Color(0XFFFAFCFE),
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                size,
-                                style: TextStyle(
-                                  color: isSelected
-                                      ? AppTheme.backgroundColor
-                                      : AppTheme.primaryColor,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 12,
-                                ),
+                          PriceWidget(
+                            price: product.price,
+                            special: product.hasSale ? product.special : null,
+                            currency: product.currency,
+                            quantity: provider.quantity,
+                            onIncrement: provider.increment,
+                            onDecrement: provider.decrement,
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Sizes
+                          if (product.sizes.isNotEmpty) ...[
+                            const Text(
+                              "Size",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                          );
-                        }).toList(),
-                      ),
+                            const SizedBox(height: 8),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: product.sizes.map((size) {
+                                  final bool isSelected =
+                                      provider.selectedSize == size.label;
+                                  final bool isAvailable = size.isAvailable;
 
-                      const SizedBox(height: 24),
-
-                      // Color
-                      ColorSelector(
-                        colors: const [
-                          Color(0xFFFFE4C4), // beige
-                          Color(0xFFADD8E6), // light blue
-                          Color(0xFF8FBC8F), // sage green
-                          Color(0xFFCD853F), // brown
-                          Color(0xFF2C2C2C), // dark black
-                        ],
-                        initialSelectedColor: Colors.brown,
-                        onColorSelected: (color) {
-                          setState(() {
-                            selectedColor = color;
-                          });
-                          // يمكنك حفظ اللون هنا إذا أردت
-                        },
-                      ),
-
-                      const SizedBox(height: 30),
-
-                      // Description
-                      Text(
-                        "Description",
-                        style: Theme.of(context).textTheme.headlineMedium!
-                            .copyWith(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        '${widget.product.description}',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.titleMedium!.copyWith(height: 1.7),
-                        maxLines: 6,
-                      ),
-
-                      const SizedBox(height: 16),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppRoutes.description,
-                            arguments: widget.product,
-                          );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              "read more",
-                              style: Theme.of(
-                                context,
-                              ).textTheme.titleMedium!.copyWith(height: 1.7),
-                            ),
-
-                            Icon(
-                              Icons.chevron_right,
-                              size: 16,
-                              color: AppTheme.secondaryColor,
+                                  return GestureDetector(
+                                    onTap: isAvailable
+                                        ? () => provider.selectSize(size.label)
+                                        : null,
+                                    child: Container(
+                                      margin: const EdgeInsets.only(right: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 18,
+                                        vertical: 10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? AppTheme.primaryColor
+                                            : isAvailable
+                                            ? const Color(0xFFFAFCFE)
+                                            : Colors.grey.shade200,
+                                        border: Border.all(
+                                          color: Colors.grey.shade300,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        size.label,
+                                        style: TextStyle(
+                                          color: isSelected
+                                              ? AppTheme.backgroundColor
+                                              : isAvailable
+                                              ? AppTheme.primaryColor
+                                              : Colors.grey,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 12,
+                                          decoration: isAvailable
+                                              ? null
+                                              : TextDecoration.lineThrough,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
                             ),
                           ],
-                        ),
+
+                          const SizedBox(height: 24),
+
+                          ColorSelector(
+                            colors: const [
+                              Color(0xFFFFE4C4),
+                              Color(0xFFADD8E6),
+                              Color(0xFF8FBC8F),
+                              Color(0xFFCD853F),
+                              Color(0xFF2C2C2C),
+                            ],
+                            initialSelectedColor: Colors.brown,
+                            onColorSelected: (color) {
+                              setState(() => selectedColor = color);
+                            },
+                          ),
+
+                          const SizedBox(height: 30),
+
+                          Text(
+                            "Description",
+                            style: Theme.of(context).textTheme.headlineMedium!
+                                .copyWith(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            product.description,
+                            style: Theme.of(
+                              context,
+                            ).textTheme.titleMedium!.copyWith(height: 1.7),
+                            maxLines: 6,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+
+                          const SizedBox(height: 16),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.description,
+                                arguments: product.description,
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  "read more",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(height: 1.7),
+                                ),
+                                Icon(
+                                  Icons.chevron_right,
+                                  size: 16,
+                                  color: AppTheme.secondaryColor,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 30),
+                        ],
                       ),
-
-                      // Add to Cart Button
-                      const SizedBox(height: 30),
-                    ],
-                  ),
+                    ),
+                    RelatedProductsSection(productId: widget.productId),
+                  ],
                 ),
-              ],
-            ),
+              ),
+
+              // Add to Cart
+              Positioned(
+                bottom: 32,
+                left: 32,
+                right: 32,
+                child: AppElevatedButton(
+                  text: product.isOutOfStock ? "OUT OF STOCK" : "ADD TO CART",
+                  onPressed: product.isOutOfStock
+                      ? null // ✅ null disables the button properly
+                      : () {
+                          Provider.of<CartProvider>(
+                            context,
+                            listen: false,
+                          ).addProduct(
+                            productModel, // ✅ use the cached converted model
+                            quantity: provider.quantity,
+                            selectedSize: provider.selectedSize,
+                            selectedColor: colorToHex(selectedColor),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${product.name} added to cart'),
+                              duration: const Duration(seconds: 2),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        },
+                ),
+              ),
+            ],
           ),
+        );
+      },
+    );
+  }
+
+  Widget _buildImageSection(
+    ProductDetailModel product,
+    ProductModel productModel, // ✅ receive the cached model
+  ) {
+    return Stack(
+      children: [
+        Container(
+          height: 550,
+          width: double.infinity,
+          color: AppTheme.cardBackgroundColor,
+          child: product.images.isEmpty
+              ? Container(color: AppTheme.cardBackgroundColor)
+              : PageView.builder(
+                  controller: _controller,
+                  itemCount: product.images.length,
+                  itemBuilder: (context, index) {
+                    return Image.network(
+                      product.images[index],
+                      fit: BoxFit.fill,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return Container(color: AppTheme.cardBackgroundColor);
+                      },
+                      errorBuilder: (_, _, _) =>
+                          Container(color: AppTheme.cardBackgroundColor),
+                    );
+                  },
+                ),
+        ),
+
+        // ✅ Favorite icon uses the cached productModel — isFavorite is stable
+        Positioned(
+          bottom: 12,
+          right: 12,
+          child: Consumer<WishlistProvider>(
+            builder: (context, wishlist, _) {
+              return GestureDetector(
+                onTap: () => wishlist.toggleFavorite(productModel),
+                child: AppImages.heartSvg(
+                  width: 24,
+                  height: 24,
+                  color: const Color(0xff495E72),
+                  isFilled: wishlist.isFavorite(productModel),
+                ),
+              );
+            },
+          ),
+        ),
+
+        // Dot indicator
+        if (product.images.length > 1)
           Positioned(
-            bottom: 32,
-            left: 32,
-            right: 32,
-            child: AppElevatedButton(
-              text: "ADD TO CART",
-              onPressed: () {
-                final cartProvider = Provider.of<CartProvider>(
-                  context,
-                  listen: false,
-                );
-
-                cartProvider.addProduct(
-                  widget.product,
-                  quantity: quantity,
-                  selectedSize: selectedSize,
-                  selectedColor: colorToHex(selectedColor),
-                );
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${widget.product.title} added to cart'),
-                    duration: const Duration(seconds: 2),
-                    behavior: SnackBarBehavior.floating,
-                  ),
+            bottom: 14,
+            left: 0,
+            right: 0,
+            child: ValueListenableBuilder<double>(
+              valueListenable: _currentPageNotifier,
+              builder: (context, value, _) {
+                return CustomDotIndicator(
+                  length: product.images.length,
+                  currentPage: value,
                 );
               },
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class ProductImage extends StatelessWidget {
-  final ProductsModel product;
-  final PageController controller;
-  final ValueNotifier<double> currentPageNotifire;
-  const ProductImage({
-    super.key,
-    required this.controller,
-    required this.currentPageNotifire,
-    required this.product,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Product Image
-        Container(
-          height: 375,
-          width: double.infinity,
-          color: AppTheme.cardBackgroundColor,
-          child: PageView.builder(
-            controller: controller,
-            itemCount: product.image != null && product.image!.isNotEmpty
-                ? product.image!.length
-                : 3,
-            itemBuilder: (context, index) {
-              return product.image != null && product.image!.isNotEmpty
-                  ? Image.asset(
-                      product.image != null && product.image!.isNotEmpty
-                          ? product.image![index]
-                          : "",
-                      fit: BoxFit.cover,
-                    )
-                  : Text('');
-            },
-          ),
-        ),
-
-        // Favorite Icon
-        Positioned(
-          bottom: 12,
-          right: 12,
-
-          child: Consumer<WishlistProvider>(
-            builder: (context, wishlistProvider, _) {
-              final isFav = wishlistProvider.isFavorite(product);
-              return GestureDetector(
-                onTap: () => wishlistProvider.toggleFavorite(product),
-                child: AppImages.heartSvg(
-                  width: 24,
-                  height: 24,
-                  color: Color(0xff495E72),
-                  isFilled: isFav,
-                ),
-              );
-            },
-          ),
-        ),
-
-        // SALE Tag
-        if (product.hasSale == true)
-          Positioned(
-            top: 6,
-            left: 20,
-            child: Container(
-              width: 58,
-              height: 32,
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppTheme.borderColor),
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(3),
-              ),
-              child: Center(
-                child: Text(
-                  "SALE",
-
-                  style: Theme.of(
-                    context,
-                  ).textTheme.displayLarge?.copyWith(fontSize: 12, height: 1.7),
-                ),
-              ),
-            ),
-          ),
-        Positioned(
-          bottom: 14,
-          left: 0,
-          right: 0,
-          child: ValueListenableBuilder<double>(
-            valueListenable: currentPageNotifire,
-            builder: (context, value, child) {
-              return CustomDotIndicator(
-                length: product.image != null && product.image!.isNotEmpty
-                    ? product.image!.length
-                    : 3,
-                currentPage: value,
-              );
-            },
-          ),
-        ),
       ],
     );
   }

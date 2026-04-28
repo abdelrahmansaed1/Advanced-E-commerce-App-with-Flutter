@@ -1,3 +1,4 @@
+import 'package:e_commerce_project/core/utils/validators.dart';
 import 'package:e_commerce_project/features/auth/provider/auth_provider.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
@@ -19,21 +20,6 @@ class _SigninPageState extends State<SigninPage> {
   bool rememberMe = false;
   final emailController = TextEditingController();
   final passController = TextEditingController();
-
-  String? validateEmail(String? value) {
-    if (value == null || value.isEmpty) return "Enter email";
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-      return "Invalid email";
-    }
-    return null;
-  }
-
-  String? validatePassword(String? value) {
-    if (value == null || value.length < 6) {
-      return "Min 6 characters";
-    }
-    return null;
-  }
 
   void submit() async {
     if (_formKey.currentState!.validate()) {
@@ -79,7 +65,11 @@ class _SigninPageState extends State<SigninPage> {
               AppTextFormField(
                 label: 'email',
                 controller: emailController,
-                validator: validateEmail,
+                validator: (str) => Validators.validateEmail(
+                  str,
+                  'This field is required',
+                  'Invalid email',
+                ),
               ),
 
               SizedBox(height: 20),
@@ -87,7 +77,11 @@ class _SigninPageState extends State<SigninPage> {
                 label: 'password',
                 controller: passController,
                 isPassword: true,
-                validator: validatePassword,
+                validator: (str) => Validators.validatePassword(
+                  str,
+                  'This field is required',
+                  'Min 6 characters',
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

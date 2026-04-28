@@ -1,7 +1,6 @@
 import 'package:e_commerce_project/features/product/model/product_model.dart';
 
 class CartItem {
-  // final int id;
   final ProductModel product;
   int quantity;
   String? selectedSize;
@@ -12,12 +11,10 @@ class CartItem {
     this.quantity = 1,
     this.selectedSize,
     this.selectedColor,
-    // required this.id,
   });
 
   double get totalPrice => product.priceAsDouble * quantity;
 
-  // للمقارنة عند إضافة نفس المنتج مرة أخرى
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

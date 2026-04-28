@@ -3,6 +3,7 @@ import 'package:e_commerce_project/core/constants/app_images.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/core/services/app_preferences.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
+import 'package:e_commerce_project/features/auth/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,11 +21,6 @@ class _SplashPageState extends State<SplashPage> {
     _navigate();
   }
 
-  // void _goToOnBoardingPage() {
-  //   Timer(Duration(seconds: 3), () {
-  //     Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
-  //   });
-  // }
   void _navigate() async {
     await Future.delayed(const Duration(seconds: 3));
     if (!mounted) return;
@@ -32,6 +28,13 @@ class _SplashPageState extends State<SplashPage> {
     final prefs = Provider.of<AppPreferences>(context, listen: false);
     final isFirst = !prefs.isOnboardingCompleted();
     final isLoggedIn = prefs.isAuthenticated();
+
+    if (isLoggedIn) {
+      await Provider.of<AuthProvider>(
+        context,
+        listen: false,
+      ).refreshTokenIfNeeded();
+    }
 
     if (!mounted) return;
 

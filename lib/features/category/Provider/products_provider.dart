@@ -25,7 +25,14 @@ class ProductsProvider extends ChangeNotifier {
   List<ProductModel> get featured => products.toList();
 
   // load first page
-  Future<void> loadProducts({int catId = 0}) async {
+  Future<void> loadProducts({int catId = 0, bool forceRefresh = false}) async {
+    if (!forceRefresh &&
+        products.isNotEmpty &&
+        categoryId == catId &&
+        state == ProductsState.success) {
+      return;
+    }
+
     categoryId = catId;
     currentPage = 1;
     products = [];

@@ -10,7 +10,6 @@ import 'package:e_commerce_project/features/product/provider/product_detail_prov
 import 'package:e_commerce_project/features/relatedproducts/data/datasource/related_product_remote_data_source.dart';
 import 'package:e_commerce_project/features/relatedproducts/data/repositories/related_product_repository.dart';
 import 'package:e_commerce_project/features/relatedproducts/provider/related_product_provider.dart';
-// import 'package:e_commerce_project/features/screens/cart/provider/cart_provider.dart';
 import 'package:e_commerce_project/features/screens/home/provider/home_provider.dart';
 import 'package:e_commerce_project/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:e_commerce_project/features/auth/data/repositories/auth_repository.dart';
@@ -24,62 +23,6 @@ import '../services/app_preferences.dart';
 
 final sl = GetIt.instance;
 
-// Future<void> init() async {
-//   //! Core
-//   //! External
-//   final sharedPreferences = await SharedPreferences.getInstance();
-//   sl.registerLazySingleton(() => sharedPreferences);
-//   sl.registerLazySingleton(() => Dio());
-
-//   // Helpers
-//   // Services
-//   sl.registerLazySingleton<AppPreferences>(() => AppPreferences(sl()));
-
-//   // Network
-//   sl.registerLazySingleton<AppInterceptors>(
-//     () => AppInterceptors(appPreferences: sl()),
-//   );
-//   sl.registerLazySingleton<ApiConsumer>(() => ApiClient(client: sl()));
-
-//   //! Features
-
-//   // ===== Auth =====
-//   sl.registerFactory(() => AuthProvider(authRepository: sl()));
-//   sl.registerLazySingleton<AuthRepository>(
-//     () => AuthRepositoryImpl(remoteDataSource: sl(), appPreferences: sl()),
-//   );
-//   sl.registerLazySingleton<AuthRemoteDataSource>(
-//     () => AuthRemoteDataSourceImpl(apiClient: sl()),
-//   );
-
-//   // Home
-//   sl.registerLazySingleton<HomeRemoteDataSource>(
-//     () => HomeRemoteDataSourceImpl(apiClient: sl()),
-//   );
-//   sl.registerLazySingleton<HomeRepository>(
-//     () => HomeRepositoryImpl(remoteDataSource: sl()),
-//   );
-//   sl.registerFactory(() => HomeProvider(homeRepository: sl()));
-
-//   // ===== Products =====
-
-//   // sl.registerLazySingleton<ProductsRemoteDataSource>(
-//   //   () => ProductsRemoteDataSourceImp(apiClient: sl()),
-//   // );
-//   // sl.registerLazySingleton<ProductsRepository>(
-//   //   () => ProductsRepositoryImpl(remoteDataSource: sl()),
-//   // );
-//   // sl.registerFactory(() => ProductsProvider(repository: sl()));
-
-//   // // ===== Products =====
-
-//   // sl.registerFactory(() => RelatedProductsProvider(repository: sl()));
-
-//   // sl.registerFactory(() => ProductDetailsProvider(repository: sl()));
-
-//   // sl.registerLazySingleton(() => CartDbHelper());
-//   // sl.registerLazySingleton(() => CartProvider(dbHelper: sl()));
-// }
 Future<void> init() async {
   // External
   final sharedPreferences = await SharedPreferences.getInstance();

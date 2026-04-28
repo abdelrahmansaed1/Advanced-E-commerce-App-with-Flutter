@@ -2,10 +2,6 @@ import 'package:e_commerce_project/features/product/model/product_model.dart';
 import 'package:flutter/material.dart';
 
 class WishlistProvider extends ChangeNotifier {
-  // Start with products that are already marked as favorite in dummy data
-  // final List<ProductModel> _favorites = DummyData.allProducts
-  //     .where((product) => product?.isFavorite == true)
-  //     .toList();
   final List<ProductModel> _favorites = [];
 
   List<ProductModel> get favorites => _favorites;

@@ -14,7 +14,8 @@ class HomeProvider extends ChangeNotifier {
   HomeModel? homeData;
   String? errorMessage;
 
-  Future<void> loadDashboard() async {
+  Future<void> loadDashboard({bool forceRefresh = false}) async {
+    if (!forceRefresh && homeData != null && state == HomeState.success) return;
     state = HomeState.loading;
     errorMessage = null;
     notifyListeners();

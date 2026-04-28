@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:e_commerce_project/features/auth/provider/auth_provider.dart';
 import 'package:e_commerce_project/features/category/Provider/products_provider.dart';
+import 'package:e_commerce_project/features/relatedproducts/data/repositories/related_product_repository.dart';
+import 'package:e_commerce_project/features/relatedproducts/provider/related_product_provider.dart';
 import 'package:e_commerce_project/features/screens/cart/provider/cart_provider.dart';
 import 'package:e_commerce_project/features/screens/home/provider/home_provider.dart';
 import 'package:e_commerce_project/features/screens/wishlist/provider/wishlist_provider.dart';
@@ -10,11 +12,8 @@ import 'package:e_commerce_project/core/services/app_preferences.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-// import 'package:path/path.dart';
-// import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'core/di/injection_container.dart' as di;
 
 class MyHttpOverrides extends HttpOverrides {
@@ -33,6 +32,12 @@ void main() async {
   final appPreferences = AppPreferences(prefs);
   HttpOverrides.global = MyHttpOverrides();
   await di.init();
+
+  // Load home and products data in parallel
+  final homeProvider = di.sl<HomeProvider>();
+  final productsProvider = di.sl<ProductsProvider>();
+  Future.wait([homeProvider.loadDashboard(), productsProvider.loadProducts()]);
+
   runApp(
     MultiProvider(
       providers: [
@@ -40,18 +45,13 @@ void main() async {
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => WishlistProvider()),
         ChangeNotifierProvider(create: (context) => di.sl<AuthProvider>()),
-        // ChangeNotifierProvider(
-        //   create: (context) => di.sl<RelatedProductsProvider>(),
-        // ),
-        // ChangeNotifierProvider(
-        //   create: (context) => di.sl<ProductDetailProvider>(),
-        // ),
         ChangeNotifierProvider(
-          create: (context) => di.sl<HomeProvider>()..loadDashboard(),
+          create: (context) => RelatedProductsProvider(
+            repository: di.sl<RelatedProductsRepository>(),
+          ),
         ),
-        ChangeNotifierProvider(
-          create: (context) => di.sl<ProductsProvider>()..loadProducts(),
-        ),
+        ChangeNotifierProvider(create: (context) => homeProvider),
+        ChangeNotifierProvider(create: (context) => productsProvider),
       ],
       child: const EcoummerceApp(),
     ),

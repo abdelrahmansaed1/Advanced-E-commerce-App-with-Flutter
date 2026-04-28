@@ -1,6 +1,7 @@
 import 'package:e_commerce_project/core/services/app_preferences.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
+import 'package:e_commerce_project/core/utils/validators.dart';
 import 'package:e_commerce_project/core/widgets/app_elevated_button.dart';
 import 'package:e_commerce_project/core/widgets/app_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -19,33 +20,6 @@ class _SignupPageState extends State<SignupPage> {
   final passController = TextEditingController();
   final nameController = TextEditingController();
   final confirmController = TextEditingController();
-
-  String? validateName(String? value) {
-    if (value == null || value.isEmpty) return "Enter your name";
-    return null;
-  }
-
-  String? validateEmail(String? value) {
-    if (value == null || value.isEmpty) return "Enter email";
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-      return "Invalid email";
-    }
-    return null;
-  }
-
-  String? validatePassword(String? value) {
-    if (value == null || value.length < 6) {
-      return "Min 6 characters";
-    }
-    return null;
-  }
-
-  String? validateConfirm(String? value) {
-    if (value != passController.text) {
-      return "Passwords do not match";
-    }
-    return null;
-  }
 
   void submit() async {
     if (_formKey.currentState!.validate()) {
@@ -75,13 +49,18 @@ class _SignupPageState extends State<SignupPage> {
               AppTextFormField(
                 label: 'name',
                 controller: nameController,
-                validator: validateName,
+                validator: (str) =>
+                    Validators.validateName(str, 'This field is required'),
               ),
               SizedBox(height: 20),
               AppTextFormField(
                 label: 'email',
                 controller: emailController,
-                validator: validateEmail,
+                validator: (str) => Validators.validateEmail(
+                  str,
+                  'This field is required',
+                  'Invalid email',
+                ),
               ),
               SizedBox(height: 20),
 
@@ -89,14 +68,23 @@ class _SignupPageState extends State<SignupPage> {
                 label: 'password',
                 controller: passController,
                 isPassword: true,
-                validator: validatePassword,
+                validator: (str) => Validators.validatePassword(
+                  str,
+                  'This field is required',
+                  'Min 6 characters',
+                ),
               ),
               SizedBox(height: 20),
               AppTextFormField(
                 label: 'confirm password',
                 controller: confirmController,
                 isPassword: true,
-                validator: validateConfirm,
+                validator: (str) => Validators.validateConfirmPassword(
+                  str,
+                  passController.text,
+                  'This field is required',
+                  'Passwords do not match',
+                ),
               ),
               SizedBox(height: 20),
               SizedBox(

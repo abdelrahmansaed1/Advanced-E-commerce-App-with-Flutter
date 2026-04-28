@@ -28,10 +28,14 @@ class AppInterceptors extends Interceptor {
     //ثبتت اللغة انجليزي ,هو استخدم مكتبة خارجية للترجمة
     options.headers['Accept-Language'] = 'en';
 
-    final token = appPreferences.getToken();
-    if (token != null && token.isNotEmpty) {
-      debugPrint("Auth Token: $token");
-      options.headers["Authorization"] = "Bearer $token";
+    final isRefreshRequest = options.path.contains('refreshToken');
+
+    if (!isRefreshRequest) {
+      final token = appPreferences.getToken();
+      if (token != null && token.isNotEmpty) {
+        debugPrint("Auth Token: $token");
+        options.headers["Authorization"] = "Bearer $token";
+      }
     }
 
     NetworkLogger().logRequest(options.method, options.path, options.data);
@@ -85,6 +89,18 @@ class AppInterceptors extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
+    if (err.response?.statusCode == 401) {
+      // Token expired — try to refresh
+      try {
+        final token = appPreferences.getToken();
+        if (token != null && token.isNotEmpty) {
+          debugPrint('401 received — token may be expired');
+        }
+      } catch (e) {
+        debugPrint('Auto-refresh failed: $e');
+      }
+    }
+
     debugPrint(
       'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}',
     );

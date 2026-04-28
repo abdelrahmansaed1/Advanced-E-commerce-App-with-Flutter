@@ -42,11 +42,11 @@ class HomeScreen extends StatelessWidget {
     if (home == null) return const SizedBox();
 
     // Available height for full banners (Screen - AppBar - BottomNav)
-    final double availableBannerHeight =
-        MediaQuery.of(context).size.height -
-        (Scaffold.of(context).appBarMaxHeight ?? kToolbarHeight) -
-        AppSizes.kMainBottomNavBarHeigth +
-        10;
+    // final double availableBannerHeight =
+    //     MediaQuery.of(context).size.height -
+    //     (Scaffold.of(context).appBarMaxHeight ?? kToolbarHeight) -
+    //     AppSizes.kMainBottomNavBarHeigth +
+    //     10;
 
     // Top banner images
     final List<String> topBannerImages = home.topBanner
@@ -57,21 +57,9 @@ class HomeScreen extends StatelessWidget {
     final List<String> footerBannerImages = home.footerBanner
         .expand((b) => b.images.map((img) => img.image))
         .toList();
-    // final footerBanners = home.footerBanner;
 
-    // Use real API data, fallback to empty list if still loading
     // final newArrivals = productsProvider.newArrivals;
     final featured = productsProvider.featured;
-
-    // Sample Data - Easy to replace with real data later
-    // final List<String> mainCarouselImages = [
-    //   "assets/images/one.jpg",
-    //   "assets/images/two.jpg",
-    //   "assets/images/three.jpg",
-    //   "assets/images/four.jpg",
-    // ];
-
-    // final List<String> bannerImages = ["assets/images/two.jpg"];
 
     return Scaffold(
       body: CustomScrollView(
@@ -79,7 +67,8 @@ class HomeScreen extends StatelessWidget {
         slivers: [
           // ==================== MAIn CAROUSEL FULL-HEIGHT BANNERS ====================
           HomeBanner(
-            height: availableBannerHeight,
+            height: MediaQuery.of(context).size.height,
+            // height: availableBannerHeight,
             title: home.title,
             count: home.topBanner.length,
             images: topBannerImages,
@@ -96,7 +85,7 @@ class HomeScreen extends StatelessWidget {
 
           // Featured Products
           SliverToBoxAdapter(
-            child: SizedBox(height: 350, child: HomeListView(items: featured)),
+            child: SizedBox(height: 400, child: HomeListView(items: featured)),
           ),
 
           // Extra space at bottom
@@ -123,7 +112,7 @@ class HomeScreen extends StatelessWidget {
               return SliverToBoxAdapter(
                 child: RelatedProductsSection(
                   productId: firstProductId,
-                  title: 'Trending Now',
+                  title: 'Related Products',
                 ),
               );
             },

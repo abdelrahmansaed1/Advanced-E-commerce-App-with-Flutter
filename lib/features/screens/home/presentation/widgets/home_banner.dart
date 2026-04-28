@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/features/screens/home/presentation/widgets/video_widget.dart';
 
@@ -43,32 +44,39 @@ class HomeBanner extends StatelessWidget {
                 top: topForText,
                 bottom: topForText != null ? null : 150,
                 left: 20,
-                child: Text(
-                  title,
-                  style: Theme.of(context).textTheme.displayLarge,
-                ),
+                child: padding == null
+                    ? const SizedBox()
+                    : Text(
+                        title,
+                        style: Theme.of(context).textTheme.displayLarge,
+                      ),
               ),
 
               Positioned(
                 top: topForButton,
                 bottom: topForButton != null ? null : 70,
                 left: 20,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      top: BorderSide(width: 1.5, color: AppTheme.primaryColor),
-                      bottom: BorderSide(
-                        width: 1.5,
-                        color: AppTheme.primaryColor,
+                child: padding == null
+                    ? const SizedBox()
+                    : Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              width: 1.5,
+                              color: AppTheme.primaryColor,
+                            ),
+                            bottom: BorderSide(
+                              width: 1.5,
+                              color: AppTheme.primaryColor,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          "SHOP NOW".toUpperCase(),
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
                       ),
-                    ),
-                  ),
-                  child: Text(
-                    "SHOP NOW".toUpperCase(),
-                    style: Theme.of(context).textTheme.labelSmall,
-                  ),
-                ),
               ),
             ],
           ),
@@ -86,21 +94,20 @@ class HomeBanner extends StatelessWidget {
 
     // ===== VIDEO =====
     if (url.toLowerCase().endsWith('.mp4')) {
-      return SmartVideoWidget(url: url, height: height);
+      return SmartVideoWidget(url: url);
     }
 
     // ===== IMAGE =====
     return url.isNotEmpty
-        ? Image.network(
-            url,
+        ? CachedNetworkImage(
+            imageUrl: url,
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
+            placeholder: (context, child) {
               return Container(color: const Color(0xffECF3FA));
             },
-            errorBuilder: (context, error, stackTrace) {
+            errorWidget: (context, error, stackTrace) {
               return Container(color: const Color(0xffECF3FA));
             },
           )

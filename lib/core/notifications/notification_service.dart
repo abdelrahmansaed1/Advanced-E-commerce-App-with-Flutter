@@ -12,10 +12,10 @@
 
 //   // ================= Initialize =================
 //   Future<void> init() async {
-//     const AndroidInitializationSettings androidSettings =
+//     final AndroidInitializationSettings androidSettings =
 //         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-//     const InitializationSettings settings =
+//     final InitializationSettings settings =
 //         InitializationSettings(
 //       android: androidSettings,
 //     );

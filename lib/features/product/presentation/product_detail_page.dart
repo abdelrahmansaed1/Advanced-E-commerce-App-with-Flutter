@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_project/core/constants/app_images.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
@@ -40,12 +41,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         _currentPageNotifier.value = _controller.page!;
       }
     });
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   context.read<ProductDetailProvider>().loadProduct(
-    //     productId: widget.productId,
-    //   );
-    // });
   }
 
   @override
@@ -308,7 +303,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         ],
                       ),
                     ),
-                    RelatedProductsSection(productId: widget.productId),
+                    RelatedProductsSection(
+                      productId: widget.productId,
+                      title: 'You May Also Like',
+                    ),
                   ],
                 ),
               ),
@@ -365,14 +363,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   controller: _controller,
                   itemCount: product.images.length,
                   itemBuilder: (context, index) {
-                    return Image.network(
-                      product.images[index],
+                    return CachedNetworkImage(
+                      imageUrl: product.images[index],
                       fit: BoxFit.fill,
-                      loadingBuilder: (context, child, progress) {
-                        if (progress == null) return child;
+                      placeholder: (context, url) {
                         return Container(color: AppTheme.cardBackgroundColor);
                       },
-                      errorBuilder: (_, _, _) =>
+                      errorWidget: (context, url, error) =>
                           Container(color: AppTheme.cardBackgroundColor),
                     );
                   },

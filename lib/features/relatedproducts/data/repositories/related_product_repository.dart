@@ -9,14 +9,23 @@ abstract class RelatedProductsRepository {
 class RelatedProductsRepositoryImpl implements RelatedProductsRepository {
   final RelatedProductsRemoteDataSource remoteDataSource;
 
+  final Map<String, List<ProductModel>> _cache = {};
+
   RelatedProductsRepositoryImpl({required this.remoteDataSource});
 
   @override
   Future<List<ProductModel>> getRelatedProducts({
     required String productId,
   }) async {
+    if (_cache.containsKey(productId)) {
+      return _cache[productId]!;
+    }
     try {
-      return await remoteDataSource.getRelatedProducts(productId: productId);
+      final product = await remoteDataSource.getRelatedProducts(
+        productId: productId,
+      );
+      _cache[productId] = product;
+      return product;
     } on Failure {
       rethrow;
     } catch (e) {

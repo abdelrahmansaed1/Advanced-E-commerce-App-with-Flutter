@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_project/core/constants/app_images.dart';
+import 'package:e_commerce_project/core/constants/app_sizes.dart';
 import 'package:e_commerce_project/features/screens/cart/provider/cart_provider.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
@@ -27,10 +29,13 @@ class CartPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: AppSizes.kMainBottomNavBarHeigth + 16,
+            ),
             child: AppElevatedButton(
-              // color: Color(0xFFF7F9FA),
-              color: Colors.black,
+              color: Color(0xFFF7F9FA),
+
               text: "SHOP NOW",
               onPressed: () {
                 Navigator.pushReplacementNamed(context, AppRoutes.screens);
@@ -86,6 +91,7 @@ class CartPage extends StatelessWidget {
             onPressed: () {},
           ),
         ),
+        SizedBox(height: AppSizes.kMainBottomNavBarHeigth),
       ],
     );
   }
@@ -127,10 +133,10 @@ class CartPage extends StatelessWidget {
                     color: AppTheme.cardBackgroundColor,
                   ),
                   child: item.product.thumbnailUrl.isNotEmpty
-                      ? Image.network(
-                          item.product.thumbnailUrl,
+                      ? CachedNetworkImage(
+                          imageUrl: item.product.thumbnailUrl,
                           fit: BoxFit.fill,
-                          errorBuilder: (_, _, _) => const SizedBox(),
+                          errorWidget: (_, _, _) => const SizedBox(),
                         )
                       : const SizedBox(),
                 ),

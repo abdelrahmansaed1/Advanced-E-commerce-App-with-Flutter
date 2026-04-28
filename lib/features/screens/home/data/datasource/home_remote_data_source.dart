@@ -17,7 +17,11 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   Future<HomeModel> getDashboard() async {
     final result = await apiClient.get(
       ApiEndpoints.dashboard,
-      queryParameters: {'currency_code': 'SAR', 'version_number': '167'},
+      queryParameters: {
+        'currency_code': 'SAR',
+        'version_number': '167',
+        'platform': 'android',
+      },
     );
     final response = result as ResponseWrapper;
 

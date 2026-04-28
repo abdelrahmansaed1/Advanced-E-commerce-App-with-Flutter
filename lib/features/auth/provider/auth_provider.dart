@@ -1,7 +1,9 @@
 import 'package:e_commerce_project/core/error/failures.dart';
+import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/features/auth/data/repositories/auth_repository.dart';
-import 'package:e_commerce_project/features/auth/data/model/user_model.dart';
+import 'package:e_commerce_project/features/auth/model/user_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' show NavigatorState;
 
 enum AuthState { idel, loading, success, error }
 
@@ -35,6 +37,21 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  Future<void> logout(NavigatorState navigator) async {
+    state = AuthState.loading;
+    notifyListeners();
+
+    await authRepository.logout();
+    state = AuthState.idel;
+    user = null;
+    notifyListeners();
+    navigator.pushNamedAndRemoveUntil(AppRoutes.signin, (route) => false);
+  }
+
+  Future<void> refreshTokenIfNeeded() async {
+    await authRepository.refreshTokenIfNeeded();
   }
 
   void reset() {

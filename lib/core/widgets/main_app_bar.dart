@@ -83,28 +83,6 @@ class CartIcon extends StatelessWidget {
   }
 }
 
-// class CountsWidget extends StatelessWidget {
-//   const CountsWidget({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: 30,
-//       padding: const EdgeInsets.all(8),
-//       decoration: BoxDecoration(
-//         shape: BoxShape.circle,
-//         color: AppTheme.primaryColor,
-//       ),
-//       child: Text(
-//         '12',
-//         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-//           color: Colors.white,
-//           fontWeight: FontWeight.bold,
-//         ),
-//       ),
-//     );
-//   }
-// }
 class CountsWidget extends StatelessWidget {
   const CountsWidget({super.key});
 

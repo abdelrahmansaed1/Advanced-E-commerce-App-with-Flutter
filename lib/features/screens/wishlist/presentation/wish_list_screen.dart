@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_project/core/constants/app_images.dart';
 import 'package:e_commerce_project/features/screens/cart/provider/cart_provider.dart';
 import 'package:e_commerce_project/features/screens/wishlist/provider/wishlist_provider.dart';
@@ -62,10 +63,10 @@ class WishListPage extends StatelessWidget {
                               color: AppTheme.cardBackgroundColor,
                             ),
                             child: product.thumbnailUrl.isNotEmpty
-                                ? Image.network(
-                                    product.thumbnailUrl,
+                                ? CachedNetworkImage(
+                                    imageUrl: product.thumbnailUrl,
                                     fit: BoxFit.fill,
-                                    errorBuilder: (_, _, _) => const SizedBox(),
+                                    errorWidget: (_, _, _) => const SizedBox(),
                                   )
                                 : const SizedBox(),
                           ),

@@ -31,6 +31,27 @@ class _CategoryState extends State<Category> {
   @override
   void initState() {
     super.initState();
+
+    _scrollController.addListener(_onScroll);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<ProductsProvider>().loadProducts(catId: 1);
+    });
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      context.read<ProductsProvider>().loadMore();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -106,7 +127,7 @@ class _CategoryState extends State<Category> {
                 crossAxisCount: 2, // عمودين
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: 0.5,
+                childAspectRatio: 0.45,
               ),
               itemCount: products.length,
               itemBuilder: (context, index) {
@@ -114,6 +135,11 @@ class _CategoryState extends State<Category> {
               },
             ),
           ),
+          if (provider.state == ProductsState.loadingMore)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Center(child: CircularProgressIndicator()),
+            ),
         ],
       ),
     );

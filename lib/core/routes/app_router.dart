@@ -39,9 +39,6 @@ class AppRouter {
       case AppRoutes.category:
         final args = settings.arguments as Map<String, dynamic>;
         return _route(Category(title: args['title'] as String?));
-      // case AppRoutes.productDetail:
-      //   final args = settings.arguments as String;
-      //   return _route(ProductDetailPage(productId: args));
 
       case AppRoutes.description:
         final args = settings.arguments as ProductModel;

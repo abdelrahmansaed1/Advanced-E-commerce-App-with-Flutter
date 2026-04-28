@@ -56,71 +56,76 @@ class _MainBottomNavBarState extends State<MainBottomNavBar> {
 
     final currentColor = isSelected ? _selectedColor : _unselectedColor;
 
-    return GestureDetector(
-      onTap: () {
-        setState(() => _selectedIndex = index);
-        widget.onTapChanged(index);
-      },
-      child: SizedBox(
-        width: 70,
-        height: 70,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Positioned(
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeOut,
+    return Container(
+      // padding: const EdgeInsets.all(12),
+      child: InkWell(
+        borderRadius: BorderRadius.all(Radius.circular(30)),
+        // behavior: HitTestBehavior.opaque,
+        onTap: () {
+          setState(() => _selectedIndex = index);
+          widget.onTapChanged(index);
+        },
+        child: SizedBox(
+          width: 70,
+          height: 70,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Positioned(
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOut,
 
-                transform: Matrix4.translationValues(
-                  0,
-                  isSelected ? -16 : -16,
-                  0,
-                ),
+                  transform: Matrix4.translationValues(
+                    0,
+                    isSelected ? -16 : -16,
+                    0,
+                  ),
 
-                width: isSelected ? 70 : 24,
-                height: isSelected ? 70 : 24,
+                  width: isSelected ? 70 : 24,
+                  height: isSelected ? 70 : 24,
 
-                decoration: BoxDecoration(shape: BoxShape.circle),
+                  decoration: BoxDecoration(shape: BoxShape.circle),
 
-                child: isSelected
-                    ? Center(
-                        child: Stack(
-                          // alignment: Alignment.center,
-                          children: [
-                            AppImages.activeSvg(),
-                            Positioned(
-                              top: 12,
-                              bottom: 9,
-                              left: 12,
-                              right: 12,
-                              child: SvgPicture.asset(
-                                _icons[index],
-                                width: isSelected ? 28 : 24,
-                                height: isSelected ? 28 : 24,
-                                alignment: AlignmentGeometry.center,
-                                colorFilter: ColorFilter.mode(
-                                  currentColor,
-                                  BlendMode.srcIn,
+                  child: isSelected
+                      ? Center(
+                          child: Stack(
+                            // alignment: Alignment.center,
+                            children: [
+                              AppImages.activeSvg(),
+                              Positioned(
+                                top: 12,
+                                bottom: 9,
+                                left: 12,
+                                right: 12,
+                                child: SvgPicture.asset(
+                                  _icons[index],
+                                  width: isSelected ? 28 : 24,
+                                  height: isSelected ? 28 : 24,
+                                  alignment: AlignmentGeometry.center,
+                                  colorFilter: ColorFilter.mode(
+                                    currentColor,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                        )
+                      : SvgPicture.asset(
+                          _icons[index],
+                          width: isSelected ? 24 : 24,
+                          height: isSelected ? 24 : 24,
+                          alignment: AlignmentGeometry.center,
+                          colorFilter: ColorFilter.mode(
+                            currentColor,
+                            BlendMode.srcIn,
+                          ),
                         ),
-                      )
-                    : SvgPicture.asset(
-                        _icons[index],
-                        width: isSelected ? 24 : 24,
-                        height: isSelected ? 24 : 24,
-                        alignment: AlignmentGeometry.center,
-                        colorFilter: ColorFilter.mode(
-                          currentColor,
-                          BlendMode.srcIn,
-                        ),
-                      ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

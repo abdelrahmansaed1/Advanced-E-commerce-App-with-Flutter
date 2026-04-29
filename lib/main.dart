@@ -11,6 +11,7 @@ import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/core/services/app_preferences.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,10 +33,25 @@ void main() async {
   final appPreferences = AppPreferences(prefs);
   HttpOverrides.global = MyHttpOverrides();
   await di.init();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      systemStatusBarContrastEnforced: false,
+      systemNavigationBarContrastEnforced: false,
+    ),
+  );
 
   // Load home and products data in parallel
   final homeProvider = di.sl<HomeProvider>();
   final productsProvider = di.sl<ProductsProvider>();
+  final relatedProvider = RelatedProductsProvider(
+    repository: di.sl<RelatedProductsRepository>(),
+  );
   Future.wait([homeProvider.loadDashboard(), productsProvider.loadProducts()]);
 
   runApp(
@@ -45,11 +61,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => WishlistProvider()),
         ChangeNotifierProvider(create: (context) => di.sl<AuthProvider>()),
-        ChangeNotifierProvider(
-          create: (context) => RelatedProductsProvider(
-            repository: di.sl<RelatedProductsRepository>(),
-          ),
-        ),
+        ChangeNotifierProvider(create: (context) => relatedProvider),
         ChangeNotifierProvider(create: (context) => homeProvider),
         ChangeNotifierProvider(create: (context) => productsProvider),
       ],
@@ -65,8 +77,16 @@ class EcoummerceApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      initialRoute: AppRoutes.splash,
+      theme: AppTheme.light.copyWith(
+        // ✅ This makes the status bar area match the scaffold background
+        appBarTheme: AppTheme.light.appBarTheme.copyWith(
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+          ),
+        ),
+      ),
+      initialRoute: AppRoutes.screens,
       onGenerateRoute: AppRouter.generateRoute,
       builder: (context, child) {
         return MediaQuery(

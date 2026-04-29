@@ -28,10 +28,10 @@ class ProductDetailPage extends StatefulWidget {
 class _ProductDetailPageState extends State<ProductDetailPage> {
   final PageController _controller = PageController();
   final ValueNotifier<double> _currentPageNotifier = ValueNotifier(0.0);
+  final ScrollController _scrollController = ScrollController(); // ← add this
   Color selectedColor = Colors.brown;
-
-  // ✅ Cache the converted ProductModel so wishlist isFavorite works consistently
   ProductModel? _cachedProductModel;
+  bool _relatedTriggered = false; // ← add this
 
   @override
   void initState() {
@@ -41,12 +41,29 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         _currentPageNotifier.value = _controller.page!;
       }
     });
+
+    // ✅ Listen for scroll position
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_relatedTriggered) return;
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+
+    // ✅ Trigger when user scrolls to 70% of the page
+    if (currentScroll >= maxScroll * 0.7) {
+      _relatedTriggered = true;
+      setState(() {}); // rebuild to show RelatedProductsSection
+    }
   }
 
   @override
   void dispose() {
     _controller.dispose();
     _currentPageNotifier.dispose();
+    _scrollController.dispose(); // ← dispose it
     super.dispose();
   }
 
@@ -116,6 +133,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           body: Stack(
             children: [
               SingleChildScrollView(
+                controller: _scrollController,
                 padding: const EdgeInsets.only(bottom: 100),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -303,10 +321,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         ],
                       ),
                     ),
-                    RelatedProductsSection(
-                      productId: widget.productId,
-                      title: 'You May Also Like',
-                    ),
+                    if (_relatedTriggered)
+                      RelatedProductsSection(
+                        productId: widget.productId,
+                        title: 'You May Also Like',
+                      ),
                   ],
                 ),
               ),

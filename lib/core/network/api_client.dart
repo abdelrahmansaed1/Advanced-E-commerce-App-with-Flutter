@@ -254,6 +254,10 @@ class ApiClient implements ApiConsumer {
             throw ServerFailure("confilct");
           case StatusCode.internalServerError:
             throw ServerFailure("internal server error");
+          case StatusCode.serviceUnavailable:
+            throw ServerFailure(
+              'Service temporarily unavailable. Please try again later.',
+            );
         }
         break;
       case DioExceptionType.cancel:

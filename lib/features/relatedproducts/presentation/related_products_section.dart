@@ -99,15 +99,12 @@ class _RelatedProductsBody extends StatefulWidget {
 }
 
 class _RelatedProductsBodyState extends State<_RelatedProductsBody> {
-  bool _hasTriggered = false;
-
   @override
   void initState() {
     super.initState();
-    // Load after a short delay — gives page time to render first
-    Future.delayed(const Duration(milliseconds: 800), () {
-      if (mounted && !_hasTriggered) {
-        _hasTriggered = true;
+    // ✅ Load immediately — widget only exists after user scrolled
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
         context.read<RelatedProductsProvider>().loadRelatedProducts(
           productId: widget.productId,
         );
@@ -119,8 +116,8 @@ class _RelatedProductsBodyState extends State<_RelatedProductsBody> {
   Widget build(BuildContext context) {
     return Consumer<RelatedProductsProvider>(
       builder: (context, provider, _) {
-        if (provider.state == RelatedProductsState.idle ||
-            provider.state == RelatedProductsState.loading) {
+        if (provider.state == RelatedProductsState.loading ||
+            provider.state == RelatedProductsState.idle) {
           return const Padding(
             padding: EdgeInsets.symmetric(vertical: 24),
             child: Center(child: CircularProgressIndicator()),

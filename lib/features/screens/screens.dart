@@ -36,19 +36,15 @@ class _ScreensState extends State<Screens> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      left: false,
-      right: false,
-      child: Scaffold(
-        extendBody: true,
-        backgroundColor: AppTheme.backgroundColor,
-        appBar: _appBars[_selectedIndex],
-        drawer: const MainAppDrawer(),
-        body: _pages[_selectedIndex],
-        bottomNavigationBar: MainBottomNavBar(
-          onTapChanged: (index) => setState(() => _selectedIndex = index),
-        ),
+    return Scaffold(
+      // extendBodyBehindAppBar: true,
+      extendBody: true,
+      backgroundColor: AppTheme.backgroundColor,
+      appBar: _appBars[_selectedIndex],
+      drawer: const MainAppDrawer(),
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: MainBottomNavBar(
+        onTapChanged: (index) => setState(() => _selectedIndex = index),
       ),
     );
   }

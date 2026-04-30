@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:e_commerce_project/core/helper/cart_db_helpers.dart';
+import 'package:e_commerce_project/core/helper/wishlist_db_helpers.dart';
 import 'package:e_commerce_project/features/auth/provider/auth_provider.dart';
 import 'package:e_commerce_project/features/category/Provider/products_provider.dart';
 import 'package:e_commerce_project/features/relatedproducts/data/repositories/related_product_repository.dart';
@@ -53,13 +55,19 @@ void main() async {
     repository: di.sl<RelatedProductsRepository>(),
   );
   Future.wait([homeProvider.loadDashboard(), productsProvider.loadProducts()]);
-
+  await di.sl<CartDbHelper>().db; // Force initialization + upgrade
+  await di.sl<WishlistDbHelpers>().db;
   runApp(
     MultiProvider(
       providers: [
         Provider<AppPreferences>(create: (_) => appPreferences),
-        ChangeNotifierProvider(create: (context) => CartProvider()),
-        ChangeNotifierProvider(create: (context) => WishlistProvider()),
+        ChangeNotifierProvider(
+          create: (context) => CartProvider(dbHelper: di.sl<CartDbHelper>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              WishlistProvider(dbHelper: di.sl<WishlistDbHelpers>()),
+        ),
         ChangeNotifierProvider(create: (context) => di.sl<AuthProvider>()),
         ChangeNotifierProvider(create: (context) => relatedProvider),
         ChangeNotifierProvider(create: (context) => homeProvider),

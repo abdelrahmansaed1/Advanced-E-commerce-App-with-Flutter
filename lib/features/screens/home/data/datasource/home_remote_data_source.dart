@@ -20,7 +20,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       queryParameters: {
         'currency_code': 'SAR',
         'version_number': '167',
-        'platform': 'android',
+        // 'platform': 'android',
       },
     );
     final response = result as ResponseWrapper;

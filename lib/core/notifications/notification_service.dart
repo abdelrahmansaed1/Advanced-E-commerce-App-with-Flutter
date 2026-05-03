@@ -1,9 +1,9 @@
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 // class NotificationService {
 //   // ================= Singleton =================
 //   NotificationService._internal();
-//   static final NotificationService _instance =
-//       NotificationService._internal();
+//   static final NotificationService _instance = NotificationService._internal();
 //   factory NotificationService() => _instance;
 
 //   // ============== Plugin Instance ==============
@@ -15,12 +15,11 @@
 //     final AndroidInitializationSettings androidSettings =
 //         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-//     final InitializationSettings settings =
-//         InitializationSettings(
+//     final InitializationSettings settings = InitializationSettings(
 //       android: androidSettings,
 //     );
 
-//     await _notificationsPlugin.initialize(settings);
+//     // await _notificationsPlugin.initialize(settings);
 //   }
 
 //   // ================= Show Notification =================
@@ -31,26 +30,27 @@
 //   }) async {
 //     const AndroidNotificationDetails androidDetails =
 //         AndroidNotificationDetails(
-//       'general_channel',
-//       'General Notifications',
-//       importance: Importance.max,
-//       priority: Priority.high,
+//           'general_channel',
+//           'General Notifications',
+//           importance: Importance.max,
+//           priority: Priority.high,
+//         );
+
+//     const NotificationDetails notificationDetails = NotificationDetails(
+//       android: androidDetails,
 //     );
 
-//     const NotificationDetails notificationDetails =
-//         NotificationDetails(android: androidDetails);
-
-//     await _notificationsPlugin.show(
-//       id,
-//       title,
-//       body,
-//       notificationDetails,
-//     );
+//     // await _notificationsPlugin.show(
+//     //   id,
+//     //   title,
+//     //   body,
+//     //   notificationDetails,
+//     // );
 //   }
 
 //   // ================= Cancel Notification =================
 //   Future<void> cancelNotification(int id) async {
-//     await _notificationsPlugin.cancel(id);
+//     // await _notificationsPlugin.cancel(id);
 //   }
 
 //   // ================= Cancel All =================

@@ -7,10 +7,42 @@ import 'package:e_commerce_project/features/screens/home/presentation/widgets/ho
 import 'package:e_commerce_project/features/screens/home/presentation/widgets/home_list_view.dart';
 import 'package:e_commerce_project/features/screens/home/presentation/widgets/home_text_section.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  bool _showRelated = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(() {
+      // لما المستخدم ينزل مثلاً 70% من الصفحة
+      if (_scrollController.position.pixels >
+              _scrollController.position.maxScrollExtent * 0.6 &&
+          !_showRelated) {
+        setState(() {
+          _showRelated = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +95,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       body: CustomScrollView(
+        controller: _scrollController,
         physics: const BouncingScrollPhysics(),
         slivers: [
           // ==================== MAIn CAROUSEL FULL-HEIGHT BANNERS ====================
@@ -85,11 +118,14 @@ class HomeScreen extends StatelessWidget {
 
           // Featured Products
           SliverToBoxAdapter(
-            child: SizedBox(height: 400, child: HomeListView(items: featured)),
+            child: SizedBox(
+              height: 400.h,
+              child: HomeListView(items: featured),
+            ),
           ),
 
           // Extra space at bottom
-          const SliverToBoxAdapter(child: SizedBox(height: 16)),
+          SliverToBoxAdapter(child: SizedBox(height: 16.h)),
 
           // ==================== MAIn CAROUSEL FULL-HEIGHT BANNERS ====================
           HomeBanner(
@@ -103,22 +139,40 @@ class HomeScreen extends StatelessWidget {
             // isFooter: true,
           ),
 
-          Consumer<ProductsProvider>(
-            builder: (context, productsProvider, _) {
-              if (productsProvider.products.isEmpty) {
-                return const SliverToBoxAdapter(child: SizedBox());
-              }
-              final firstProductId = productsProvider.products.first.productId;
-              return SliverToBoxAdapter(
-                child: RelatedProductsSection(
-                  productId: firstProductId,
-                  title: 'Related Products',
-                ),
-              );
-            },
-          ),
+          // Consumer<ProductsProvider>(
+          //   builder: (context, productsProvider, _) {
+          //     if (productsProvider.products.isEmpty) {
+          //       return const SliverToBoxAdapter(child: SizedBox());
+          //     }
+          //     final firstProductId = productsProvider.products.first.productId;
+          //     return SliverToBoxAdapter(
+          //       child: RelatedProductsSection(
+          //         productId: firstProductId,
+          //         title: 'Related Products',
+          //       ),
+          //     );
+          //   },
+          // ),
+          if (_showRelated)
+            Consumer<ProductsProvider>(
+              builder: (context, productsProvider, _) {
+                if (productsProvider.products.isEmpty) {
+                  return const SliverToBoxAdapter(child: SizedBox());
+                }
+
+                final firstProductId =
+                    productsProvider.products.first.productId;
+
+                return SliverToBoxAdapter(
+                  child: RelatedProductsSection(
+                    productId: firstProductId,
+                    title: 'Related Products',
+                  ),
+                );
+              },
+            ),
           SliverToBoxAdapter(
-            child: SizedBox(height: AppSizes.kMainBottomNavBarHeigth),
+            child: SizedBox(height: AppSizes.kMainBottomNavBarHeigth.h),
           ),
         ],
       ),

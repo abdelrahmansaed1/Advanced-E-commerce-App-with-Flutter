@@ -1,50 +1,48 @@
+import 'package:e_commerce_project/core/providers/navigation_provider.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/core/widgets/main_app_bar.dart';
 import 'package:e_commerce_project/core/widgets/main_app_drawer.dart';
 import 'package:e_commerce_project/core/widgets/main_bottom_nav_bar.dart';
-import 'package:e_commerce_project/features/screens/wishlist/presentation/wish_list_screen.dart';
 import 'package:e_commerce_project/features/screens/cart/presentation/cart_screen.dart';
 import 'package:e_commerce_project/features/screens/home/presentation/home_screen.dart';
 import 'package:e_commerce_project/features/screens/profile/presentation/profile_screen.dart';
 import 'package:e_commerce_project/features/screens/search/presentation/search_screen.dart';
+import 'package:e_commerce_project/features/screens/wishlist/presentation/wish_list_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class Screens extends StatefulWidget {
+class Screens extends StatelessWidget {
   const Screens({super.key});
 
   @override
-  State<Screens> createState() => _ScreensState();
-}
-
-class _ScreensState extends State<Screens> {
-  int _selectedIndex = 0;
-  final List<Widget> _pages = [
-    const HomeScreen(),
-    const SearchScreen(),
-    const CartPage(),
-    const WishListPage(),
-    const ProfileScreen(),
-  ];
-
-  final List<PreferredSizeWidget?> _appBars = [
-    const MainAppBar(), // index 0
-    const MainAppBar(isSearchBar: true), // index 1
-    const MainAppBar(title: "Order"), // index 2
-    const MainAppBar(title: "Wishlist"), // index 3
-    const MainAppBar(title: "My Profile"), // index 4
-  ];
-
-  @override
   Widget build(BuildContext context) {
+    final nav = context.watch<NavigationProvider>();
+
+    final pages = [
+      const HomeScreen(),
+      const SearchScreen(),
+      const CartPage(),
+      const WishListPage(),
+      const ProfileScreen(),
+    ];
+
+    final appBars = [
+      const MainAppBar(),
+      const MainAppBar(isSearchBar: true),
+      const MainAppBar(title: "Order"),
+      const MainAppBar(title: "Wishlist"),
+      const MainAppBar(title: "My Profile"),
+    ];
+
     return Scaffold(
-      // extendBodyBehindAppBar: true,
       extendBody: true,
       backgroundColor: AppTheme.backgroundColor,
-      appBar: _appBars[_selectedIndex],
+      appBar: appBars[nav.index],
+      body: IndexedStack(index: nav.index, children: pages),
+      // body: pages[nav.index],
       drawer: const MainAppDrawer(),
-      body: _pages[_selectedIndex],
       bottomNavigationBar: MainBottomNavBar(
-        onTapChanged: (index) => setState(() => _selectedIndex = index),
+        onTapChanged: (i) => context.read<NavigationProvider>().setIndex(i),
       ),
     );
   }

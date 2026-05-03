@@ -1,5 +1,6 @@
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 
 class PriceWidget extends StatelessWidget {
   final String price;
@@ -38,7 +39,7 @@ class PriceWidget extends StatelessWidget {
           if (special != null) ...[
             Text(
               '$currency $special',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              style: AppTextStyles.titleMedium.copyWith(
                 height: 1.7,
                 decoration: TextDecoration.lineThrough,
               ),
@@ -49,7 +50,7 @@ class PriceWidget extends StatelessWidget {
           // Current price
           Text(
             '$currency $price',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            style: AppTextStyles.titleLarge.copyWith(
               height: 1.7,
               fontWeight: FontWeight.w700,
             ),
@@ -66,10 +67,7 @@ class PriceWidget extends StatelessWidget {
                 child: const Icon(Icons.remove, size: 16),
               ),
               const SizedBox(width: 16),
-              Text(
-                quantity.toString(),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              Text(quantity.toString(), style: AppTextStyles.titleMedium),
               const SizedBox(width: 16),
               GestureDetector(
                 onTap: onIncrement,

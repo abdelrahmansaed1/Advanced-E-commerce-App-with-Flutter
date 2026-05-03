@@ -5,7 +5,9 @@ import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/core/widgets/app_elevated_button.dart';
 import 'package:e_commerce_project/core/widgets/app_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -45,23 +47,17 @@ class _SigninPageState extends State<SigninPage> {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Welcome Back!',
-                style: Theme.of(context).textTheme.displayLarge,
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Sign in to continue',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              SizedBox(height: 20),
+              Text('Welcome Back!', style: AppTextStyles.displayLarge),
+              SizedBox(height: 10.h),
+              Text('Sign in to continue', style: AppTextStyles.titleMedium),
+              SizedBox(height: 20.h),
               AppTextFormField(
                 label: 'email',
                 controller: emailController,
@@ -72,7 +68,7 @@ class _SigninPageState extends State<SigninPage> {
                 ),
               ),
 
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               AppTextFormField(
                 label: 'password',
                 controller: passController,
@@ -105,12 +101,12 @@ class _SigninPageState extends State<SigninPage> {
                     onPressed: () {},
                     child: Text(
                       'Forgot Password?',
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: AppTextStyles.bodyLarge,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               SizedBox(
                 child: Consumer<AuthProvider>(
                   builder: (context, auth, _) {
@@ -126,16 +122,13 @@ class _SigninPageState extends State<SigninPage> {
                 children: [
                   Text(
                     'Don\'t have an account?',
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: AppTextStyles.titleMedium,
                   ),
                   TextButton(
                     onPressed: () {
                       Navigator.pushReplacementNamed(context, AppRoutes.signup);
                     },
-                    child: Text(
-                      'Sign up',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
+                    child: Text('Sign up', style: AppTextStyles.bodyLarge),
                   ),
                 ],
               ),

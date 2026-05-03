@@ -14,7 +14,9 @@ import 'package:e_commerce_project/features/relatedproducts/presentation/related
 import 'package:e_commerce_project/features/screens/cart/provider/cart_provider.dart';
 import 'package:e_commerce_project/features/screens/wishlist/provider/wishlist_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final String productId;
@@ -110,7 +112,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(provider.errorMessage ?? 'Something went wrong'),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12.h),
                   ElevatedButton(
                     onPressed: () =>
                         provider.loadProduct(productId: widget.productId),
@@ -134,14 +136,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             children: [
               SingleChildScrollView(
                 controller: _scrollController,
-                padding: const EdgeInsets.only(bottom: 100),
+                padding: EdgeInsets.only(bottom: 100.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildImageSection(product, productModel),
 
                     Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.all(16.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -162,9 +164,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                   Icon(
                                     Icons.star,
                                     color: AppTheme.secondaryColor,
-                                    size: 10,
+                                    size: 10.w,
                                   ),
-                                  const SizedBox(width: 4),
+                                  SizedBox(width: 4.w),
                                   Text(
                                     // ✅ rating is double, format it cleanly
                                     product.rating > 0
@@ -173,14 +175,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyMedium
-                                        ?.copyWith(fontSize: 12),
+                                        ?.copyWith(fontSize: 12.sp),
                                   ),
                                 ],
                               ),
                             ],
                           ),
 
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16.h),
 
                           PriceWidget(
                             price: product.price,
@@ -195,14 +197,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                           // Sizes
                           if (product.sizes.isNotEmpty) ...[
-                            const Text(
+                            Text(
                               "Size",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8.h),
                             SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
@@ -216,10 +218,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                         ? () => provider.selectSize(size.label)
                                         : null,
                                     child: Container(
-                                      margin: const EdgeInsets.only(right: 10),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 18,
-                                        vertical: 10,
+                                      margin: EdgeInsets.only(right: 10.w),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 18.w,
+                                        vertical: 10.h,
                                       ),
                                       decoration: BoxDecoration(
                                         color: isSelected
@@ -230,7 +232,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                         border: Border.all(
                                           color: Colors.grey.shade300,
                                         ),
-                                        borderRadius: BorderRadius.circular(8),
+                                        borderRadius: BorderRadius.circular(
+                                          8.r,
+                                        ),
                                       ),
                                       child: Text(
                                         size.label,
@@ -241,7 +245,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                               ? AppTheme.primaryColor
                                               : Colors.grey,
                                           fontWeight: FontWeight.w700,
-                                          fontSize: 12,
+                                          fontSize: 12.sp,
                                           decoration: isAvailable
                                               ? null
                                               : TextDecoration.lineThrough,
@@ -254,7 +258,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             ),
                           ],
 
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24.h),
 
                           ColorSelector(
                             colors: const [
@@ -270,17 +274,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             },
                           ),
 
-                          const SizedBox(height: 30),
+                          SizedBox(height: 30.h),
 
                           Text(
                             "Description",
-                            style: Theme.of(context).textTheme.headlineMedium!
-                                .copyWith(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            style: AppTextStyles.headlineMedium.copyWith(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16.h),
                           Text(
                             product.description,
                             style: Theme.of(
@@ -290,7 +293,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             overflow: TextOverflow.ellipsis,
                           ),
 
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16.h),
                           GestureDetector(
                             onTap: () {
                               Navigator.pushNamed(
@@ -310,14 +313,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 ),
                                 Icon(
                                   Icons.chevron_right,
-                                  size: 16,
+                                  size: 16.w,
                                   color: AppTheme.secondaryColor,
                                 ),
                               ],
                             ),
                           ),
 
-                          const SizedBox(height: 30),
+                          SizedBox(height: 30.h),
                         ],
                       ),
                     ),
@@ -332,9 +335,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
               // Add to Cart
               Positioned(
-                bottom: 32,
-                left: 32,
-                right: 32,
+                bottom: 32.h,
+                left: 32.w,
+                right: 32.w,
                 child: AppElevatedButton(
                   text: product.isOutOfStock ? "OUT OF STOCK" : "ADD TO CART",
                   onPressed: product.isOutOfStock
@@ -373,7 +376,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return Stack(
       children: [
         Container(
-          height: 550,
+          height: 550.h,
           width: double.infinity,
           color: AppTheme.cardBackgroundColor,
           child: product.images.isEmpty
@@ -397,15 +400,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
         // ✅ Favorite icon uses the cached productModel — isFavorite is stable
         Positioned(
-          bottom: 12,
-          right: 12,
+          bottom: 12.h,
+          right: 12.w,
           child: Consumer<WishlistProvider>(
             builder: (context, wishlist, _) {
               return GestureDetector(
                 onTap: () => wishlist.toggleFavorite(productModel),
                 child: AppImages.heartSvg(
-                  width: 24,
-                  height: 24,
+                  width: 24.w,
+                  height: 24.h,
                   color: const Color(0xff495E72),
                   isFilled: wishlist.isFavorite(productModel),
                 ),
@@ -417,7 +420,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         // Dot indicator
         if (product.images.length > 1)
           Positioned(
-            bottom: 14,
+            bottom: 14.h,
             left: 0,
             right: 0,
             child: ValueListenableBuilder<double>(

@@ -5,12 +5,14 @@ class CartItem {
   int quantity;
   String? selectedSize;
   String? selectedColor;
+  final int maxQuantity;
 
   CartItem({
     required this.product,
     this.quantity = 1,
     this.selectedSize,
     this.selectedColor,
+    this.maxQuantity = 10, // Default max quantity if not provided
   });
 
   double get totalPrice => product.priceAsDouble * quantity;

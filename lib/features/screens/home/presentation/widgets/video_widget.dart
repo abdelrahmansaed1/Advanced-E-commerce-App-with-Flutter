@@ -13,7 +13,8 @@ class SmartVideoWidget extends StatefulWidget {
   State<SmartVideoWidget> createState() => _SmartVideoWidgetState();
 }
 
-class _SmartVideoWidgetState extends State<SmartVideoWidget> {
+class _SmartVideoWidgetState extends State<SmartVideoWidget>
+    with AutomaticKeepAliveClientMixin {
   VideoPlayerController? _controller;
   bool _isVisible = false;
 
@@ -47,6 +48,7 @@ class _SmartVideoWidgetState extends State<SmartVideoWidget> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return VisibilityDetector(
       key: Key(widget.url),
       onVisibilityChanged: (info) => _handleVisibility(info.visibleFraction),
@@ -76,4 +78,7 @@ class _SmartVideoWidgetState extends State<SmartVideoWidget> {
     _controller?.dispose();
     super.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

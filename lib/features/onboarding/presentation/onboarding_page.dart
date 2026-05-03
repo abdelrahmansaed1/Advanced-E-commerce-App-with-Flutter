@@ -6,6 +6,7 @@ import 'package:e_commerce_project/features/onboarding/presentation/widgets/onbo
 import 'package:e_commerce_project/features/onboarding/presentation/widgets/custom_dot_indicator.dart';
 import 'package:e_commerce_project/features/onboarding/model/onboarding_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -57,7 +58,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 120),
+          SizedBox(height: 120.h),
           // PageView
           Expanded(
             child: PageView.builder(
@@ -71,7 +72,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
           // Dots
           Padding(
-            padding: const EdgeInsets.only(left: 20, top: 20),
+            padding: EdgeInsets.only(left: 20.w, top: 20.h),
             child: CustomDotIndicator(
               length: data.length,
               currentPage: currentPage,
@@ -83,14 +84,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
           SizedBox(
             width: double.infinity,
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(20.0.w),
               child: AppElevatedButton(
                 text: "Get Started",
                 onPressed: nextPage,
               ),
             ),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 20.h),
         ],
       ),
     );

@@ -1,9 +1,11 @@
 import 'package:e_commerce_project/core/constants/app_images.dart';
 import 'package:e_commerce_project/core/routes/app_routes.dart';
+import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/core/widgets/app_list_item.dart';
 import 'package:e_commerce_project/features/category/Provider/products_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class MainAppDrawer extends StatelessWidget {
@@ -50,7 +52,7 @@ class MainAppDrawer extends StatelessWidget {
               'products': productsProvider.featured,
             },
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 20.h),
 
           AppListItem(
             icon: AppImages.bellSvg(),
@@ -78,7 +80,7 @@ class MainAppDrawer extends StatelessWidget {
       },
       child: ListTile(
         leading: Icon(Icons.chevron_right, color: AppTheme.primaryColor),
-        title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
+        title: Text(title, style: AppTextStyles.bodyLarge),
       ),
     );
   }
@@ -96,27 +98,24 @@ class DrawerHeaderWidget extends StatelessWidget {
           ClipOval(
             child: Image.asset(
               AppImages.personal,
-              width: 60,
-              height: 60,
+              width: 60.w,
+              height: 60.h,
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: 10.w),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Abdelrahman Saed",
-                style: Theme.of(context).textTheme.labelMedium,
-              ),
-              SizedBox(height: 8),
+              Text("Abdelrahman Saed", style: AppTextStyles.labelMedium),
+              SizedBox(height: 8.h),
 
               Text(
                 'abdelrahmansaeds321@gmail.com',
                 style: Theme.of(
                   context,
-                ).textTheme.bodySmall?.copyWith(fontSize: 12),
+                ).textTheme.bodySmall?.copyWith(fontSize: 10.sp),
               ),
             ],
           ),

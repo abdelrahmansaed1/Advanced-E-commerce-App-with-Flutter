@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/features/screens/home/presentation/widgets/video_widget.dart';
-
+import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeBanner extends StatelessWidget {
   final double height;
@@ -32,7 +33,10 @@ class HomeBanner extends StatelessWidget {
 
         return Container(
           height: height,
-          padding: EdgeInsets.only(right: padding ?? 0, bottom: padding ?? 0),
+          padding: EdgeInsets.only(
+            right: padding?.w ?? 0,
+            bottom: padding?.h ?? 0,
+          ),
           child: Stack(
             // fit: StackFit.expand,
             children: [
@@ -41,40 +45,37 @@ class HomeBanner extends StatelessWidget {
 
               // Content
               Positioned(
-                top: topForText,
-                bottom: topForText != null ? null : 150,
-                left: 20,
+                top: topForText?.h,
+                bottom: topForText != null ? null : 150.h,
+                left: 20.w,
                 child: padding == null
                     ? const SizedBox()
-                    : Text(
-                        title,
-                        style: Theme.of(context).textTheme.displayLarge,
-                      ),
+                    : Text(title, style: AppTextStyles.displayLarge),
               ),
 
               Positioned(
-                top: topForButton,
-                bottom: topForButton != null ? null : 70,
-                left: 20,
+                top: topForButton?.h,
+                bottom: topForButton != null ? null : 70.h,
+                left: 20.w,
                 child: padding == null
                     ? const SizedBox()
                     : Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
                         decoration: BoxDecoration(
                           border: Border(
                             top: BorderSide(
-                              width: 1.5,
+                              width: 1.5.w,
                               color: AppTheme.primaryColor,
                             ),
                             bottom: BorderSide(
-                              width: 1.5,
+                              width: 1.5.w,
                               color: AppTheme.primaryColor,
                             ),
                           ),
                         ),
                         child: Text(
                           "SHOP NOW".toUpperCase(),
-                          style: Theme.of(context).textTheme.labelSmall,
+                          style: AppTextStyles.labelSmall,
                         ),
                       ),
               ),

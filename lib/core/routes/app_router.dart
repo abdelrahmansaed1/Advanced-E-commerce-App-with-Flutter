@@ -55,7 +55,6 @@ class AppRouter {
             child: ProductDetailPage(productId: productId),
           ),
         );
-
       default:
         return _route(const Screens());
     }

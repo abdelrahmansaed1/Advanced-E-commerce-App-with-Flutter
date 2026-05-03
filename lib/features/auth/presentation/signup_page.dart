@@ -5,7 +5,9 @@ import 'package:e_commerce_project/core/utils/validators.dart';
 import 'package:e_commerce_project/core/widgets/app_elevated_button.dart';
 import 'package:e_commerce_project/core/widgets/app_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -37,22 +39,22 @@ class _SignupPageState extends State<SignupPage> {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Sign Up", style: Theme.of(context).textTheme.displayLarge),
-              SizedBox(height: 20),
+              Text("Sign Up", style: AppTextStyles.displayLarge),
+              SizedBox(height: 20.h),
               AppTextFormField(
                 label: 'name',
                 controller: nameController,
                 validator: (str) =>
                     Validators.validateName(str, 'This field is required'),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               AppTextFormField(
                 label: 'email',
                 controller: emailController,
@@ -62,7 +64,7 @@ class _SignupPageState extends State<SignupPage> {
                   'Invalid email',
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
 
               AppTextFormField(
                 label: 'password',
@@ -74,7 +76,7 @@ class _SignupPageState extends State<SignupPage> {
                   'Min 6 characters',
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               AppTextFormField(
                 label: 'confirm password',
                 controller: confirmController,
@@ -86,7 +88,7 @@ class _SignupPageState extends State<SignupPage> {
                   'Passwords do not match',
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               SizedBox(
                 child: AppElevatedButton(text: 'Sign Up', onPressed: submit),
               ),
@@ -95,7 +97,7 @@ class _SignupPageState extends State<SignupPage> {
                 children: [
                   Text(
                     'Already have an account?',
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: AppTextStyles.titleMedium,
                   ),
                   TextButton(
                     onPressed: () {

@@ -1,5 +1,6 @@
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomPopup extends StatelessWidget {
   final Widget content;
@@ -12,12 +13,12 @@ class CustomPopup extends StatelessWidget {
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 1,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+      insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Container(
-        width: width ?? 340,
+        width: width ?? 340.w,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: AppTheme.primaryColor,
@@ -27,7 +28,7 @@ class CustomPopup extends StatelessWidget {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+          padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 24.h),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,5 +1,6 @@
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppElevatedButton extends StatelessWidget {
   final String text;
@@ -19,7 +20,7 @@ class AppElevatedButton extends StatelessWidget {
           ? BoxDecoration(
               color: color,
               border: Border.all(color: AppTheme.primaryColor),
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(5.r),
             )
           : BoxDecoration(
               gradient: LinearGradient(
@@ -31,7 +32,7 @@ class AppElevatedButton extends StatelessWidget {
         style: Theme.of(context).elevatedButtonTheme.style,
 
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          padding: EdgeInsets.symmetric(vertical: 16.h),
           child: color != null
               ? Text(
                   text.toUpperCase(),

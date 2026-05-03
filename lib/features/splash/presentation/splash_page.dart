@@ -5,6 +5,9 @@ import 'package:e_commerce_project/core/services/app_preferences.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/features/auth/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:e_commerce_project/core/theme/app_text_styles.dart';
+
 import 'package:provider/provider.dart';
 
 class SplashPage extends StatefulWidget {
@@ -54,16 +57,13 @@ class _SplashPageState extends State<SplashPage> {
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 80.0),
+            padding: EdgeInsets.only(top: 80.h),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 AppImages.logoSvg(),
-                SizedBox(height: 20),
-                Text(
-                  'kastelli',
-                  style: Theme.of(context).textTheme.displayMedium,
-                ),
+                SizedBox(height: 20.h),
+                Text('kastelli', style: AppTextStyles.displayMedium),
               ],
             ),
           ),

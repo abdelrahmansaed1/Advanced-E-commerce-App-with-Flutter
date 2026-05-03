@@ -7,7 +7,9 @@ import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:e_commerce_project/core/widgets/app_elevated_button.dart';
 import 'package:e_commerce_project/features/screens/cart/model/cart_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -30,8 +32,8 @@ class CartPage extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: AppSizes.kMainBottomNavBarHeigth + 16,
+              horizontal: 16.w,
+              vertical: AppSizes.kMainBottomNavBarHeigth + 16.h,
             ),
             child: AppElevatedButton(
               color: Color(0xFFF7F9FA),
@@ -55,11 +57,11 @@ class CartPage extends StatelessWidget {
       children: [
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.only(
-              top: 16,
-              left: 16,
+            padding: EdgeInsets.only(
+              top: 16.h,
+              left: 16.w,
               right: 0,
-              bottom: 16,
+              bottom: 0.h,
             ),
             itemCount: cart.items.length,
             itemBuilder: (context, index) {
@@ -68,9 +70,11 @@ class CartPage extends StatelessWidget {
           ),
         ),
 
+        SizedBox(height: 16.h),
+
         // Voucher / Promo Code
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: hasPromo
               ? _buildPromoApplied(context, cart)
               : _buildVoucherInput(context, cart),
@@ -78,13 +82,13 @@ class CartPage extends StatelessWidget {
 
         // Order Summary
         Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16.w),
           child: _buildOrderSummary(context, cart),
         ),
 
         // Checkout Button
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+          padding: EdgeInsets.fromLTRB(16.w, 0.h, 16.w, 16.h),
           child: AppElevatedButton(
             color: AppTheme.secondaryBackgroundColor,
             text: "PROCEED TO CHECKOUT",
@@ -107,140 +111,206 @@ class CartPage extends StatelessWidget {
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 0),
+        padding: EdgeInsets.only(right: 0.w),
         color: Colors.red,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(16.w),
           child: AppImages.trashSvg(),
         ),
       ),
       onDismissed: (context) => cart.removeItem(item),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.only(right: 0, top: 8, bottom: 8, left: 16),
-        child: Row(
-          children: [
-            Stack(
-              children: [
-                Container(
-                  height: 100,
-                  width: 100,
+        padding: EdgeInsets.only(right: 0.w, top: 0.h, bottom: 16.h, left: 0.w),
+        child: InkWell(
+          onTap: () {
+            // Navigate to product details
+            Navigator.pushNamed(
+              context,
+              AppRoutes.productDetail,
+              arguments: item.product.productId,
+            );
+          },
+          child: Row(
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    height: 150.h,
+                    width: 100.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(5.r),
+                        bottomLeft: Radius.circular(5.r),
+                      ),
+                      color: AppTheme.cardBackgroundColor,
+                    ),
+                    child: item.product.thumbnailUrl.isNotEmpty
+                        ? CachedNetworkImage(
+                            imageUrl: item.product.thumbnailUrl,
+                            fit: BoxFit.cover,
+                            errorWidget: (_, _, _) => const SizedBox(),
+                          )
+                        : const SizedBox(),
+                  ),
+                  if (item.product.hasSale == true)
+                    Positioned(
+                      bottom: 10.h,
+                      left: 10.w,
+                      child: Container(
+                        width: 33.w,
+                        height: 16.h,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6.w,
+                          vertical: 1.h,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppTheme.borderColor),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(3.r),
+                        ),
+                        child: Text(
+                          "SALE",
+                          style: AppTextStyles.displayLarge.copyWith(
+                            fontSize: 8.sp,
+                            height: 1.6,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(right: 16.w),
+                  width: 120.w,
+                  height: 150.h,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(5),
-                      bottomLeft: Radius.circular(5),
-                    ),
-                    color: AppTheme.cardBackgroundColor,
-                  ),
-                  child: item.product.thumbnailUrl.isNotEmpty
-                      ? CachedNetworkImage(
-                          imageUrl: item.product.thumbnailUrl,
-                          fit: BoxFit.fill,
-                          errorWidget: (_, _, _) => const SizedBox(),
-                        )
-                      : const SizedBox(),
-                ),
-                if (item.product.hasSale == true)
-                  Positioned(
-                    bottom: 10,
-                    left: 10,
-                    child: Container(
-                      width: 33,
-                      height: 16,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 1,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppTheme.borderColor),
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                      child: Text(
-                        "SALE",
-                        style: Theme.of(context).textTheme.displayLarge
-                            ?.copyWith(fontSize: 8, height: 1.6),
-                      ),
+                    border: Border(
+                      top: BorderSide(color: AppTheme.borderColor),
+                      bottom: BorderSide(color: AppTheme.borderColor),
                     ),
                   ),
-              ],
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(right: 16),
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(color: AppTheme.borderColor),
-                    bottom: BorderSide(color: AppTheme.borderColor),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    const SizedBox(width: 12),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 12.w),
 
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.product.name,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        Row(
-                          children: [
-                            item.product.hasSale
-                                ? Text(
-                                    '\$${item.product.special}',
-                                    style: Theme.of(context).textTheme.bodySmall
-                                        ?.copyWith(
-                                          decoration:
-                                              TextDecoration.lineThrough,
-                                          fontSize: 12,
-                                        ),
-                                  )
-                                : Text(''),
-                            SizedBox(width: 5),
-                            Text(
-                              '\$${item.product.price}',
-                              style: Theme.of(context).textTheme.displaySmall,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item.product.name,
+                            style: AppTextStyles.bodyMedium,
+                          ),
+                          Row(
+                            children: [
+                              item.product.hasSale
+                                  ? Text(
+                                      '${item.product.currency} ${item.product.special}',
+                                      style: AppTextStyles.bodySmall.copyWith(
+                                        decoration: TextDecoration.lineThrough,
+                                        fontSize: 12.sp,
+                                      ),
+                                    )
+                                  : Text(''),
+                              SizedBox(width: 5.w),
+                              Text(
+                                '${item.product.currency} ${item.product.price}',
+                                style: AppTextStyles.displaySmall,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "Color: ${item.selectedColor ?? '-'}   Size: ${item.selectedSize ?? '-'}",
+                                style: AppTextStyles.bodySmall,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          InkWell(
+                            child: Icon(
+                              Icons.add,
+                              size: 16.w,
+                              color: cart.canIncrement(item)
+                                  ? AppTheme.primaryColor
+                                  : Colors.grey.shade400,
                             ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "Color: ${item.selectedColor ?? '-'}   Size: ${item.selectedSize ?? '-'}",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GestureDetector(
-                          child: const Icon(Icons.add, size: 16),
-                          onTap: () =>
-                              cart.updateQuantity(item, item.quantity + 1),
-                        ),
-                        Text("${item.quantity}"),
-                        GestureDetector(
-                          child: const Icon(Icons.remove, size: 16),
-                          onTap: () =>
-                              cart.updateQuantity(item, item.quantity - 1),
-                        ),
-                      ],
-                    ),
-                  ],
+                            onTap: () async {
+                              final success = await cart.incrementQuantity(
+                                item,
+                              );
+                              if (!success && context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Only ${item.maxQuantity} available in stock',
+                                    ),
+                                    duration: const Duration(seconds: 2),
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              }
+
+                              // cart.updateQuantity(item, item.quantity + 1);
+                            },
+                          ),
+                          Text("${item.quantity}"),
+                          InkWell(
+                            child: Icon(Icons.remove, size: 16.w),
+                            onTap: () async {
+                              final shouldAskRemove = await cart
+                                  .decrementQuantity(item);
+                              if (shouldAskRemove && context.mounted) {
+                                final confirm = await _showRemoveDialog(
+                                  context,
+                                  item.product.name,
+                                );
+                                if (confirm == true) {
+                                  cart.removeItem(item);
+                                }
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  // ✅ Confirmation dialog
+  Future<bool?> _showRemoveDialog(BuildContext context, String productName) {
+    return showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: const Text('Remove Item'),
+        content: Text('Remove "$productName" from your cart?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Keep'),
+          ),
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Remove'),
+          ),
+        ],
       ),
     );
   }
@@ -260,10 +330,10 @@ class CartPage extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12.w),
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
             gradient: LinearGradient(
               colors: [AppTheme.primaryColor, Colors.black],
             ),
@@ -281,16 +351,13 @@ class CartPage extends StatelessWidget {
 
   Widget _buildPromoApplied(BuildContext context, CartProvider cart) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12.w),
 
       child: Row(
         children: [
           const Icon(Icons.check, color: Colors.green),
-          const SizedBox(width: 8),
-          Text(
-            "Promocode applied",
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
+          SizedBox(width: 8.w),
+          Text("Promocode applied", style: AppTextStyles.headlineSmall),
         ],
       ),
     );
@@ -298,10 +365,10 @@ class CartPage extends StatelessWidget {
 
   Widget _buildOrderSummary(BuildContext context, CartProvider cart) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: Color(0xFFF7F9FA),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: AppTheme.borderColor),
       ),
       child: Column(
@@ -325,7 +392,7 @@ class CartPage extends StatelessWidget {
               "-\$${(cart.subtotal * cart.discount / 100).toStringAsFixed(2)}",
               isDiscount: true,
             ),
-          const Divider(height: 30),
+          Divider(height: 30.h),
           _summaryRow(
             context,
             "Total",
@@ -344,25 +411,22 @@ class CartPage extends StatelessWidget {
     bool isDiscount = false,
     bool isTotal = false,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: isTotal
-                ? TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
-                    fontSize: 14,
-                    color: AppTheme.primaryColor,
-                  )
-                : Theme.of(context).textTheme.bodyMedium,
-          ),
-          Text(value, style: Theme.of(context).textTheme.bodyMedium),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: isTotal
+              ? TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                  fontSize: 14.sp,
+                  color: AppTheme.primaryColor,
+                )
+              : AppTextStyles.bodyMedium,
+        ),
+        Text(value, style: AppTextStyles.bodyMedium),
+      ],
     );
   }
 }

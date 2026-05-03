@@ -1,5 +1,6 @@
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 
 class HomeTextSection extends StatelessWidget {
   final String title;
@@ -19,14 +20,14 @@ class HomeTextSection extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: Theme.of(context).textTheme.headlineMedium),
+          Text(title, style: AppTextStyles.headlineMedium),
           GestureDetector(
             onTap: () {
               Navigator.pushNamed(context, route, arguments: args);
             },
             child: Row(
               children: [
-                Text("view all", style: Theme.of(context).textTheme.bodyLarge),
+                Text("view all", style: AppTextStyles.bodyLarge),
                 SizedBox(width: 6),
                 Icon(
                   Icons.chevron_right,

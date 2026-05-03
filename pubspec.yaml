@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   cached_network_image: ^3.4.1
+  collection: ^1.19.1
   cupertino_icons: ^1.0.8
   dio: ^5.9.2
   dots_indicator: ^4.0.1
@@ -36,6 +37,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_dotenv: ^6.0.1
+  flutter_screenutil: ^5.9.3
   flutter_svg: ^2.2.4
   get_it: ^9.2.1
   path: ^1.9.1

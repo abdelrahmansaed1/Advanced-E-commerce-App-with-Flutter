@@ -1,5 +1,7 @@
 import 'package:e_commerce_project/features/product/model/product_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 
 class DescriptionScreen extends StatelessWidget {
   final ProductModel product;
@@ -11,21 +13,15 @@ class DescriptionScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Description')),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
 
             children: [
-              Text(
-                product.name,
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              SizedBox(height: 16),
+              Text(product.name, style: AppTextStyles.headlineMedium),
+              SizedBox(height: 16.h),
 
-              Text(
-                product.description,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              Text(product.description, style: AppTextStyles.titleMedium),
             ],
           ),
         ),

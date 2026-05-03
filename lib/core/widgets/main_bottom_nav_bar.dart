@@ -1,20 +1,18 @@
 import 'package:e_commerce_project/core/constants/app_images.dart';
 import 'package:e_commerce_project/core/constants/app_sizes.dart';
+import 'package:e_commerce_project/core/providers/navigation_provider.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
-class MainBottomNavBar extends StatefulWidget {
+class MainBottomNavBar extends StatelessWidget {
   final Function(int) onTapChanged;
-  const MainBottomNavBar({super.key, required this.onTapChanged});
+  MainBottomNavBar({super.key, required this.onTapChanged});
 
-  @override
-  State<MainBottomNavBar> createState() => _MainBottomNavBarState();
-}
-
-class _MainBottomNavBarState extends State<MainBottomNavBar> {
-  int _selectedIndex = 0;
   final Color _selectedColor = AppTheme.primaryColor;
+
   final Color _unselectedColor = AppTheme.backgroundColor;
 
   final List<String> _icons = [
@@ -27,45 +25,54 @@ class _MainBottomNavBarState extends State<MainBottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
+    final currentIndex = context.watch<NavigationProvider>().index;
     return Container(
       color: Colors.transparent,
       child: Container(
         height: AppSizes.kMainBottomNavBarHeigth,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [AppTheme.primaryColor, Colors.black],
           ),
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
+            topLeft: Radius.circular(15.r),
+            topRight: Radius.circular(15.r),
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: List.generate(
             _icons.length,
-            (index) => _navItem(index: index),
+            (index) => _navItem(
+              context: context,
+              currentIndex: currentIndex,
+              index: index,
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _navItem({required int index}) {
-    final isSelected = _selectedIndex == index;
+  Widget _navItem({
+    required BuildContext context,
+    required int index,
+    required int currentIndex,
+  }) {
+    final isSelected = currentIndex == index;
 
     final currentColor = isSelected ? _selectedColor : _unselectedColor;
 
     return InkWell(
-      borderRadius: BorderRadius.all(Radius.circular(30)),
+      borderRadius: BorderRadius.all(Radius.circular(30.r)),
       // behavior: HitTestBehavior.opaque,
       onTap: () {
-        setState(() => _selectedIndex = index);
-        widget.onTapChanged(index);
+        context.read<NavigationProvider>().setIndex(index);
+        onTapChanged(index);
       },
       child: SizedBox(
-        width: 70,
-        height: 70,
+        width: 70.w,
+        height: 70.h,
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -76,12 +83,14 @@ class _MainBottomNavBarState extends State<MainBottomNavBar> {
 
                 transform: Matrix4.translationValues(
                   0,
-                  isSelected ? -16 : -16,
+                  // this is for small devices, to prevent the icon from going out of the container
+                  // isSelected ? -12.6.h : -12.6.h,
+                  isSelected ? -18.5.h : -18.5.h,
                   0,
                 ),
 
-                width: isSelected ? 70 : 24,
-                height: isSelected ? 70 : 24,
+                width: isSelected ? 70.w : 24.w,
+                height: isSelected ? 70.h : 24.h,
 
                 decoration: BoxDecoration(shape: BoxShape.circle),
 
@@ -92,14 +101,14 @@ class _MainBottomNavBarState extends State<MainBottomNavBar> {
                           children: [
                             AppImages.activeSvg(),
                             Positioned(
-                              top: 12,
-                              bottom: 9,
-                              left: 12,
-                              right: 12,
+                              top: 12.h,
+                              bottom: 9.h,
+                              left: 12.w,
+                              right: 12.w,
                               child: SvgPicture.asset(
                                 _icons[index],
-                                width: isSelected ? 28 : 24,
-                                height: isSelected ? 28 : 24,
+                                width: isSelected ? 28.w : 24.w,
+                                height: isSelected ? 28.h : 24.h,
                                 alignment: AlignmentGeometry.center,
                                 colorFilter: ColorFilter.mode(
                                   currentColor,
@@ -112,8 +121,8 @@ class _MainBottomNavBarState extends State<MainBottomNavBar> {
                       )
                     : SvgPicture.asset(
                         _icons[index],
-                        width: isSelected ? 24 : 24,
-                        height: isSelected ? 24 : 24,
+                        width: 24.w,
+                        height: 24.h,
                         alignment: AlignmentGeometry.center,
                         colorFilter: ColorFilter.mode(
                           currentColor,

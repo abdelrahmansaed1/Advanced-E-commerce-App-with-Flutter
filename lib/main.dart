@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:e_commerce_project/core/helper/cart_db_helpers.dart';
-import 'package:e_commerce_project/core/helper/wishlist_db_helpers.dart';
+import 'package:e_commerce_project/core/helper/db_helpers.dart';
+import 'package:e_commerce_project/core/providers/navigation_provider.dart';
 import 'package:e_commerce_project/features/auth/provider/auth_provider.dart';
 import 'package:e_commerce_project/features/category/Provider/products_provider.dart';
 import 'package:e_commerce_project/features/relatedproducts/data/repositories/related_product_repository.dart';
@@ -15,6 +15,7 @@ import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/di/injection_container.dart' as di;
@@ -55,23 +56,23 @@ void main() async {
     repository: di.sl<RelatedProductsRepository>(),
   );
   Future.wait([homeProvider.loadDashboard(), productsProvider.loadProducts()]);
-  await di.sl<CartDbHelper>().db; // Force initialization + upgrade
-  await di.sl<WishlistDbHelpers>().db;
+  await di.sl<DbHelper>().db; // Force initialization + upgrade
+  await di.sl<DbHelper>().db;
   runApp(
     MultiProvider(
       providers: [
         Provider<AppPreferences>(create: (_) => appPreferences),
         ChangeNotifierProvider(
-          create: (context) => CartProvider(dbHelper: di.sl<CartDbHelper>()),
+          create: (context) => CartProvider(dbHelper: di.sl<DbHelper>()),
         ),
         ChangeNotifierProvider(
-          create: (context) =>
-              WishlistProvider(dbHelper: di.sl<WishlistDbHelpers>()),
+          create: (context) => WishlistProvider(dbHelper: di.sl<DbHelper>()),
         ),
         ChangeNotifierProvider(create: (context) => di.sl<AuthProvider>()),
         ChangeNotifierProvider(create: (context) => relatedProvider),
         ChangeNotifierProvider(create: (context) => homeProvider),
         ChangeNotifierProvider(create: (context) => productsProvider),
+        ChangeNotifierProvider(create: (context) => NavigationProvider()),
       ],
       child: const EcoummerceApp(),
     ),
@@ -83,29 +84,37 @@ class EcoummerceApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light.copyWith(
-        // ✅ This makes the status bar area match the scaffold background
-        appBarTheme: AppTheme.light.appBarTheme.copyWith(
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.dark,
-          ),
-        ),
-      ),
-      initialRoute: AppRoutes.screens,
-      onGenerateRoute: AppRouter.generateRoute,
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.linear(
-              MediaQuery.textScalerOf(context).scale(1).clamp(0.85, 1),
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      useInheritedMediaQuery: true,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light.copyWith(
+          appBarTheme: AppTheme.light.appBarTheme.copyWith(
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+              systemNavigationBarColor: Colors.transparent,
+              systemNavigationBarIconBrightness: Brightness.dark,
             ),
           ),
-          child: child!,
-        );
-      },
+        ),
+
+        initialRoute: AppRoutes.splash,
+        onGenerateRoute: AppRouter.generateRoute,
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.linear(
+                MediaQuery.textScalerOf(context).scale(1).clamp(0.85, 1),
+              ),
+            ),
+            child: child!,
+          );
+        },
+      ),
     );
   }
 }

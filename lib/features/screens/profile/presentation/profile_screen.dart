@@ -3,6 +3,8 @@ import 'package:e_commerce_project/core/routes/app_routes.dart';
 import 'package:e_commerce_project/core/widgets/app_list_item.dart';
 import 'package:e_commerce_project/features/screens/profile/presentation/widgets/signout_popup.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -11,43 +13,43 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32.0),
+        padding: EdgeInsets.symmetric(vertical: 32.h),
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.w),
               child: Row(
                 children: [
                   ClipOval(
                     child: Image.asset(
                       AppImages.personal,
-                      width: 60,
-                      height: 60,
+                      width: 60.w,
+                      height: 60.h,
                       fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(width: 10.w),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         "Abdelrahman Saed",
-                        style: Theme.of(context).textTheme.labelMedium,
+                        style: AppTextStyles.labelMedium,
                       ),
-                      SizedBox(height: 8),
+                      SizedBox(height: 8.h),
                       Text(
                         'abdelrahmansaeds321@gmail.com',
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: AppTextStyles.bodySmall,
                       ),
                     ],
                   ),
                   Spacer(),
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       Navigator.pushNamed(context, AppRoutes.editProfile);
                     },
-                    child: AppImages.editSvg(width: 16, height: 16),
+                    child: AppImages.editSvg(width: 16.w, height: 16.h),
                   ),
                 ],
               ),
@@ -57,32 +59,28 @@ class ProfileScreen extends StatelessWidget {
               title: 'My orders',
               showArrow: true,
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 16.h),
             AppListItem(
-              icon: AppImages.creditCardSvg(width: 16, height: 16),
+              icon: AppImages.creditCardSvg(width: 16.w, height: 16.h),
               title: 'Payment method',
               showArrow: true,
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 16.h),
             AppListItem(
-              icon: AppImages.mapPinSvg(width: 16, height: 16),
+              icon: AppImages.mapPinSvg(width: 16.w, height: 16.h),
               title: 'Delivery address',
               showArrow: true,
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 16.h),
             AppListItem(
-              icon: AppImages.giftSvg(width: 16, height: 16),
+              icon: AppImages.giftSvg(width: 16.w, height: 16.h),
               title: 'Promocodes & gift cards',
               showArrow: true,
             ),
-            SizedBox(height: 16),
-            // AppListItem(
-            //   icon: AppImages.logoutSvg(width: 16, height: 16),
-            //   title: 'Sign out',
-            //   onTap: () => SignoutPopup(),
-            // ),
+            SizedBox(height: 16.h),
+
             AppListItem(
-              icon: AppImages.logoutSvg(width: 16, height: 16),
+              icon: AppImages.logoutSvg(width: 16.w, height: 16.h),
               title: 'Sign out',
               onTap: () {
                 showDialog(
@@ -91,7 +89,7 @@ class ProfileScreen extends StatelessWidget {
                 );
               },
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 16.h),
           ],
         ),
       ),

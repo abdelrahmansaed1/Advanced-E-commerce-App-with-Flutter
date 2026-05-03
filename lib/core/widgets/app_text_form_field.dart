@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppTextFormField extends StatefulWidget {
   final String label;
@@ -31,7 +32,10 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
         labelText: widget.label.toUpperCase(),
         suffixIcon: widget.isPassword
             ? IconButton(
-                icon: Icon(obscure ? Icons.visibility_off : Icons.visibility),
+                icon: Icon(
+                  obscure ? Icons.visibility_off : Icons.visibility,
+                  size: 20.w,
+                ),
                 onPressed: () {
                   setState(() {
                     obscure = !obscure;
@@ -39,7 +43,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
                 },
               )
             : (widget.controller.text.isNotEmpty
-                  ? const Icon(Icons.check, size: 20)
+                  ? Icon(Icons.check, size: 20.w)
                   : null),
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:e_commerce_project/core/helper/cart_db_helpers.dart';
-import 'package:e_commerce_project/core/helper/wishlist_db_helpers.dart';
+import 'package:e_commerce_project/core/helper/db_helpers.dart';
 import 'package:e_commerce_project/features/auth/provider/auth_provider.dart';
 import 'package:e_commerce_project/features/category/Provider/products_provider.dart';
 import 'package:e_commerce_project/features/category/data/datasources/products_remote_data_source.dart';
@@ -86,6 +85,5 @@ Future<void> init() async {
     () => RelatedProductsRepositoryImpl(remoteDataSource: sl()),
   );
   sl.registerFactory(() => RelatedProductsProvider(repository: sl()));
-  sl.registerLazySingleton(() => CartDbHelper());
-  sl.registerLazySingleton(() => WishlistDbHelpers());
+  sl.registerLazySingleton(() => DbHelper());
 }

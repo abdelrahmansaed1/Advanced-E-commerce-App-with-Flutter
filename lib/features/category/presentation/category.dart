@@ -5,7 +5,9 @@ import 'package:e_commerce_project/features/category/presentation/widgets/custom
 import 'package:e_commerce_project/core/widgets/main_app_bar.dart';
 import 'package:e_commerce_project/core/widgets/product_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 
 class Category extends StatefulWidget {
   final String? title;
@@ -42,7 +44,7 @@ class _CategoryState extends State<Category> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
+        _scrollController.position.maxScrollExtent - 100) {
       context.read<ProductsProvider>().loadMore();
     }
   }
@@ -77,7 +79,7 @@ class _CategoryState extends State<Category> {
         children: [
           // Filters and Sorting Row
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -87,11 +89,8 @@ class _CategoryState extends State<Category> {
                   child: Row(
                     children: [
                       AppImages.filterSvg(),
-                      SizedBox(width: 6),
-                      Text(
-                        "Filters",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
+                      SizedBox(width: 6.w),
+                      Text("Filters", style: AppTextStyles.bodyMedium),
                     ],
                   ),
                 ),
@@ -101,14 +100,11 @@ class _CategoryState extends State<Category> {
                   onTap: _showSortingSheet,
                   child: Row(
                     children: [
-                      Text(
-                        "Sorting by",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(width: 6),
-                      const Icon(
+                      Text("Sorting by", style: AppTextStyles.bodyMedium),
+                      SizedBox(width: 6.w),
+                      Icon(
                         Icons.keyboard_arrow_down,
-                        size: 16,
+                        size: 16.w,
                         color: AppTheme.secondaryColor,
                       ),
                     ],
@@ -119,26 +115,72 @@ class _CategoryState extends State<Category> {
           ),
 
           // Products Grid
+          // Expanded(
+          //   child: GridView.builder(
+          //     controller: _scrollController,
+          //     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //       crossAxisCount: 2, // عمودين
+          //       crossAxisSpacing: 16.w,
+          //       mainAxisSpacing: 16.h,
+          //       childAspectRatio: 0.41.h,
+          //     ),
+          //     itemCount: products.length,
+          //     itemBuilder: (context, index) {
+          //       return ProductCard(product: products[index]);
+          //     },
+          //   ),
+          // ),
           Expanded(
-            child: GridView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // عمودين
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 0.45,
-              ),
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                return ProductCard(product: products[index]);
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final screenWidth = constraints.maxWidth;
+
+                final horizontalPadding = 32.w; // 16 + 16
+                final spacing = 16.w; // بين العناصر
+
+                final itemWidth =
+                    (screenWidth - horizontalPadding - spacing) / 2;
+
+                // 👇 هنا تحدد شكل الكارد
+                final imageHeight = itemWidth * 1.6; // الصورة
+                final textHeight = 60.h; // الاسم + السعر
+                final buttonHeight = 50.h; // زر
+                final totalHeight = imageHeight + textHeight + buttonHeight;
+
+                final aspectRatio = itemWidth / totalHeight;
+
+                return GridView.builder(
+                  controller: _scrollController,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 8.h,
+                  ),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16.w,
+                    mainAxisSpacing: 16.h,
+                    childAspectRatio: aspectRatio, // ✅ dynamic
+                  ),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    return ProductCard(product: products[index]);
+                  },
+                );
               },
             ),
           ),
           if (provider.state == ProductsState.loadingMore)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: Center(child: CircularProgressIndicator()),
+            Container(
+              color: Colors.transparent,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 64.h, top: 16.h),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.transparent,
+                  ),
+                ),
+              ),
             ),
         ],
       ),
@@ -176,7 +218,7 @@ class _CategoryState extends State<Category> {
       title: Text(
         label,
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 16.sp,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
         ),
       ),
@@ -186,13 +228,13 @@ class _CategoryState extends State<Category> {
                 border: Border.all(color: AppTheme.secondaryColor),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.circle_rounded,
                 color: AppTheme.primaryColor,
-                size: 24,
+                size: 24.w,
               ),
             )
-          : const Icon(Icons.circle_outlined, color: Colors.grey, size: 26),
+          : Icon(Icons.circle_outlined, color: Colors.grey, size: 26.w),
       onTap: () {
         setState(() {
           _currentSorting = value;

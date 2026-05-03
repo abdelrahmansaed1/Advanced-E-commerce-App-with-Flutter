@@ -1,6 +1,9 @@
+import 'package:e_commerce_project/core/providers/navigation_provider.dart';
+import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 import 'package:e_commerce_project/features/screens/cart/provider/cart_provider.dart';
 import 'package:e_commerce_project/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/app_images.dart';
@@ -9,18 +12,20 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool? isSearchBar;
   final String? title;
   final bool showBackButton;
+  final VoidCallback? goToCart;
   const MainAppBar({
     super.key,
     this.title,
     this.isSearchBar = false,
     this.showBackButton = false,
+    this.goToCart,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: true,
-      leadingWidth: 40,
+      leadingWidth: 40.w,
       elevation: 0,
       scrolledUnderElevation: 0,
       leading: showBackButton
@@ -30,15 +35,15 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
               color: AppTheme.primaryColor,
             )
           : IconButton(
-              padding: const EdgeInsets.only(left: 16.0),
+              padding: EdgeInsets.only(left: 16.w),
               icon: AppImages.burgerSvg(),
               onPressed: () => Scaffold.of(context).openDrawer(),
             ),
       title: titleMethod(context),
       centerTitle: true,
-      actions: [CountsWidget(), CartIcon()],
+      actions: [ShoppingCart()],
       bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(1),
+        preferredSize: Size.fromHeight(1.h),
         child: Divider(),
       ),
     );
@@ -50,10 +55,10 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
             decoration: InputDecoration(
               icon: AppImages.searchSvg(
                 color: AppTheme.secondaryColor,
-                width: 14,
-                height: 14,
+                width: 14.w,
+                height: 14.h,
               ),
-              contentPadding: const EdgeInsets.all(0),
+              contentPadding: EdgeInsets.all(0.w),
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
@@ -61,14 +66,33 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
               disabledBorder: InputBorder.none,
               errorBorder: InputBorder.none,
               hintText: 'Search',
-              hintStyle: Theme.of(context).textTheme.bodyMedium,
+              hintStyle: AppTextStyles.bodyMedium,
             ),
           )
-        : Text(title ?? '', style: Theme.of(context).textTheme.headlineSmall);
+        : Text(title ?? '', style: AppTextStyles.headlineSmall);
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 1);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight + 1.h);
+}
+
+class ShoppingCart extends StatelessWidget {
+  const ShoppingCart({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        context.read<NavigationProvider>().goToCart(context);
+      },
+      child: Container(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [CountsWidget(), CartIcon()],
+        ),
+      ),
+    );
+  }
 }
 
 class CartIcon extends StatelessWidget {
@@ -77,8 +101,8 @@ class CartIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 10.0, left: 5),
-      child: GestureDetector(onTap: () {}, child: AppImages.shoppingCartSvg()),
+      padding: EdgeInsets.only(right: 10.w, left: 5.w),
+      child: AppImages.shoppingCartSvg(),
     );
   }
 }
@@ -90,8 +114,8 @@ class CountsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final count = context.watch<CartProvider>().itemCount;
     return Container(
-      width: 30,
-      padding: const EdgeInsets.all(8),
+      width: 30.w,
+      padding: EdgeInsets.all(8.w),
       decoration: const BoxDecoration(
         shape: BoxShape.circle,
         color: AppTheme.primaryColor,
@@ -99,7 +123,7 @@ class CountsWidget extends StatelessWidget {
       child: Center(
         child: Text(
           '$count',
-          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+          style: AppTextStyles.bodySmall.copyWith(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

@@ -11,23 +11,13 @@
 
 A fully-featured, cross-platform e-commerce mobile application built with Flutter. The app delivers a smooth and modern shopping experience with local data persistence, network integration, and multi-platform support (Android, iOS, Web, Desktop).
 
----
-
-## 📱 Screenshots
-
-> _Add your screenshots here._
-
-| Home | Product Detail | Cart | Profile |
-|------|---------------|------|---------|
-| ![Home](assets/images/home.png) | ![Detail](assets/images/detail.png) | ![Cart](assets/images/cart.png) | ![Profile](assets/images/profile.png) |
 
 ---
 
 ## ✨ Features
 
 - 🏠 **Home Screen** – Product listings with banner carousel and category filters
-- 🔍 **Product Search & Categories** – Browse and filter products easily
-- 📄 **Product Detail Page** – Rich product view with image gallery and video support
+- 📄 **Product Detail Page** – Rich product view with image gallery
 - 🛒 **Shopping Cart** – Add, update, and remove items with real-time totals
 - 💾 **Local Persistence** – Cart and user preferences saved locally via SQLite & SharedPreferences
 - 🌐 **REST API Integration** – Fetch live product data using Dio with pretty logging
@@ -213,17 +203,6 @@ flutter build ios --release
 flutter build web --release
 ```
 
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 ---
 
